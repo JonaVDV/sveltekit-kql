@@ -1,14 +1,12 @@
-import type { ServerLoad, ServerLoadEvent } from '@sveltejs/kit';
-import type { KirbyApiResponse, KirbyQueryResponse, KirbyQuerySchema } from 'kirby-types';
+import type { ServerLoadEvent } from '@sveltejs/kit';
+import type { KirbyQueryResponse, KirbyQuerySchema } from 'kirby-types';
 import util from 'util';
 import { _generateTypes, _writeRoutePaths, getJsonTypes, writeTypes } from './types/generate';
-import type { PageData } from '../../routes/about/$types';
 
-// exclude all keys from T that have a value of type KirbyQuerySchema
-
-
-
-
+/**
+ * @todo Add some typescript magic that makes it so the queries themselves are not included in the final result based on the debug flag
+ * 
+ */
 class Kql<TCallback> {
 	private queries: Set<KirbyQuerySchema> = new Set();
 	private results = new Map<string, any>();
