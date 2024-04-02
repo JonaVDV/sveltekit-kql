@@ -20,9 +20,9 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
-    "./kql": {
+    "./server": {
       "svelte": "./dist/index.js",
-      "import": "./dist/kql/index.js"
+      "import": "./dist/server/index.js"
     },
     "./blocks": {
       "svelte": "./dist/index.js",
@@ -38,12 +38,6 @@
     "@sveltejs/kit": "^2.0.0",
     "kirby-types": "^0.7.0",
     "svelte": "^4.0.0"
-  },
-  "typesVersions": {
-    ">4.0": {
-      "./kql": ["./dist/kql/index.d.ts"],
-      "./blocks": ["./dist/blocks/index.d.ts"]
-    }
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",

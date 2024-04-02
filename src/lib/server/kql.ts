@@ -1,7 +1,8 @@
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import type { KirbyQueryResponse, KirbyQuerySchema } from 'kirby-types';
 import util from 'util';
-import { _generateTypes, _writeRoutePaths, getJsonTypes, writeTypes } from './types/generate';
+import { _generateTypes, _writeRoutePaths, getJsonTypes, writeTypes } from '$lib';
+
 
 /**
  * @todo Add some typescript magic that makes it so the queries themselves are not included in the final result based on the debug flag
@@ -68,6 +69,9 @@ class Kql<TCallback> {
 
 		const jsonTypes = getJsonTypes(mergedResults);
 		const typeString = _generateTypes(jsonTypes, 2);
+
+
+
 		_writeRoutePaths(event.route.id ?? '');
 		writeTypes(typeString, event.route.id ?? '');
 
@@ -145,7 +149,7 @@ class Kql<TCallback> {
  *
  * @example
  *
- * import { createKql } from '$lib/kql/index.js';
+ * import { createKql } from 'sveltekit-kql';
  * import type { PageServerLoad } from './$types.d.ts';
  *
  * export const load = createKql(async () => {

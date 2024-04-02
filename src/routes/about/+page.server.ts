@@ -1,4 +1,4 @@
-import { createKql } from '$lib';
+import { createKql } from '$lib/server';
 import type { KirbyQuerySchema } from 'kirby-types';
 import type { PageServerLoad } from './$types';
 

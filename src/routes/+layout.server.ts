@@ -1,4 +1,4 @@
-import { createKql } from '$lib/kql/fetch.js';
+import { createKql } from '$lib/server';
 import type { KirbyQuerySchema } from 'kirby-types';
 import type { LayoutServerLoad } from './$types.d.ts';
 
