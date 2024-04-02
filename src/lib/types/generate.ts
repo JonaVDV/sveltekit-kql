@@ -30,7 +30,24 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
 }
 
 function AddPageData(){
-	return `\ntype KQLData = import("./$types").PageData & Data;`;
+	const utilities = `
+	type QueryType = {
+		query: string extends import('kirby-types').KirbyQuery ? import('kirby-types').KirbyQuery : string;
+		select: string[]
+    | Record<string, string | number | boolean | QueryType>
+	};
+
+	type ExcludeQueries<T> = {
+		[K in keyof T]: T[K] extends QueryType ? never : T[K];
+	};
+
+	type RemoveNever<T> = Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;
+	`
+	const data = `\ntype KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & Data>`
+
+	const result = `${utilities} ${data}`
+
+	return result;
 }
 
 function _handleArrayTypes(data: Array<any>) {
@@ -81,7 +98,8 @@ function _getKirbyTypesPath(route: string) {
 }
 
 export function writeTypes(types: string, route: string) {
-	const type = `export type Data = {\n${types}};\n${AddPageData()}`;
+	const expand = 'type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;\n';
+	const type = `${expand}export type Data = {\n${types}};\n${AddPageData()}`;
 	const typesPath = path.join(_getKirbyTypesPath(route), `$kql.d.ts`);
 	fs.writeFileSync(typesPath, type);
 }
