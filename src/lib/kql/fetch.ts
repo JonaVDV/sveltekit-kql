@@ -62,7 +62,7 @@ class Kql<TCallback> {
 		// Exclude the queries from the final result if debug is off
 		if (!this.debug) {
 			for (const key of this.queryKeys) {
-				delete loadResult[key];
+				delete (loadResult as { [key: string]: any })[key];
 			}
 		}
 
