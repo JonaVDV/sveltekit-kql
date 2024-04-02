@@ -5,7 +5,6 @@ import { _generateTypes, _writeRoutePaths, getJsonTypes, writeTypes } from './ty
 
 /**
  * @todo Add some typescript magic that makes it so the queries themselves are not included in the final result based on the debug flag
- * 
  */
 class Kql<TCallback> {
 	private queries: Set<KirbyQuerySchema> = new Set();
@@ -16,8 +15,6 @@ class Kql<TCallback> {
 		private loadFunction: (event: ServerLoadEvent) => Promise<TCallback>,
 		private debug = false
 	) {}
-
-	
 
 	/**
 	 * Checks if the given object is an instance of KirbyQuerySchema.
@@ -30,11 +27,6 @@ class Kql<TCallback> {
 	}
 
 	async kql(event: ServerLoadEvent) {
-
-		// exclude all keys from T that have a value of type KirbyQuerySchema
-
-
-
 		if (!this.loadFunction) {
 			throw new Error('No load function provided');
 		}
@@ -43,7 +35,7 @@ class Kql<TCallback> {
 		if (!loadResult) {
 			throw new Error('No load result provided. Please return an object from the load function.');
 		}
-				
+
 		// Iterate over the properties of the loadResult object
 		for (const key in loadResult) {
 			const value = loadResult[key];
@@ -54,11 +46,11 @@ class Kql<TCallback> {
 				this.addQuery(value, key);
 			}
 		}
-		
+
 		// Execute all queries
 		const queryPromises = Array.from(this.queries).map((query) => this.executeQuery(query, event));
 		const results = await Promise.all(queryPromises);
-		
+
 		// Store the results
 		results.forEach((result, index) => {
 			const query = Array.from(this.queries)[index];
@@ -66,7 +58,7 @@ class Kql<TCallback> {
 		});
 
 		const mergedResults = this.mergeResults();
-		
+
 		// Exclude the queries from the final result if debug is off
 		if (!this.debug) {
 			for (const key of this.queryKeys) {
@@ -76,11 +68,8 @@ class Kql<TCallback> {
 
 		const jsonTypes = getJsonTypes(mergedResults);
 		const typeString = _generateTypes(jsonTypes, 2);
-		_writeRoutePaths(event.route.id ?? '')
-		writeTypes(typeString, event.route.id ?? '');	
-		
-		
-		
+		_writeRoutePaths(event.route.id ?? '');
+		writeTypes(typeString, event.route.id ?? '');
 
 		return {
 			...mergedResults,
