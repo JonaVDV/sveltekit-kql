@@ -1,7 +1,6 @@
 import { createKql } from '$lib';
 import type { KirbyQuerySchema } from 'kirby-types';
 import type { PageServerLoad } from './$types';
-// import type {Data} from './$kql'
 
 export const load = createKql(async ({route}) => {
     const AboutQuery = {
@@ -21,7 +20,7 @@ export const load = createKql(async ({route}) => {
             select: ['id', 'uuid', 'url', 'alt'],
           },
         },
-    }
+    } as KirbyQuerySchema
 
     return {
         queries: [AboutQuery],
