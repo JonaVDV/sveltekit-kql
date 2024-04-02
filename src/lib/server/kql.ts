@@ -27,7 +27,13 @@ class Kql<TCallback> {
 		return obj && typeof obj === 'object' && 'query' in obj;
 	}
 
-	async kql(event: ServerLoadEvent) {
+
+	/**
+	 * The main function that is called by the server to fetch data from Kirby using the KQL API.
+	 * @param event the server load event from sveltekit this way we can access important information like the fetch function
+	 * @returns the data returned by the load function and the data fetched using the query you returned
+	 */
+	async kql(event: ServerLoadEvent): Promise<TCallback> {
 		if (!this.loadFunction) {
 			throw new Error('No load function provided');
 		}
@@ -103,7 +109,7 @@ class Kql<TCallback> {
 	 * @returns The merged results as an object with keys representing the original keys and values representing the results.
 	 */
 	private mergeResults() {
-		const mergedResults: { [key: string]: KirbyQueryResponse } = {}; // Add index signature
+		const mergedResults = {}; // Add index signature
 		this.results.forEach((result, key) => {
 			mergedResults[key] = result;
 		});
