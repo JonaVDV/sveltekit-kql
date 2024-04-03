@@ -3,7 +3,6 @@ import type { KirbyQueryResponse, KirbyQuerySchema } from 'kirby-types';
 import util from 'util';
 import { _generateTypes, _writeRoutePaths, getJsonTypes, writeTypes } from '$lib';
 
-
 /**
  * @todo Add some typescript magic that makes it so the queries themselves are not included in the final result based on the debug flag
  */
@@ -26,7 +25,6 @@ class Kql<TCallback> {
 	private isKirbyQuerySchema(obj: any): obj is KirbyQuerySchema {
 		return obj && typeof obj === 'object' && 'query' in obj;
 	}
-
 
 	/**
 	 * The main function that is called by the server to fetch data from Kirby using the KQL API.
@@ -75,9 +73,6 @@ class Kql<TCallback> {
 
 		const jsonTypes = getJsonTypes(mergedResults);
 		const typeString = _generateTypes(jsonTypes, 2);
-
-
-
 		_writeRoutePaths(event.route.id ?? '');
 		writeTypes(typeString, event.route.id ?? '');
 
