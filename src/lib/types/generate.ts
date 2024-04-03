@@ -32,22 +32,34 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
 function AddPageData(){
 	const utilities = `
 	type QueryType = {
-		query: string extends import('kirby-types').KirbyQuery ? import('kirby-types').KirbyQuery : string;
-		select: string[]
+    query: string;
+    select?: string[]
     | Record<string, string | number | boolean | QueryType>
-	};
+};
 
-	type ExcludeQueries<T> = {
-		[K in keyof T]: T[K] extends QueryType ? never : T[K];
-	};
+type QueryArrayType = QueryType[];
 
-	type RemoveNever<T> = Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;
+type ExcludeQueries<T> = {
+    [K in keyof T]: T[K] extends QueryArrayType | QueryType ? never : T[K]
+};
+
+type RemoveNever<T> = T extends any[] 
+    ? RemoveNever<T[number]>[]
+    : Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;
+
+type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>>>;
+
+
 	`
-	const data = `\ntype KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & Data>`
+	const data = `\ntype KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>`
 
 	const result = `${utilities} ${data}`
 
-	return result;
+	return _formatText(result, 2);
+}
+
+function _formatText(text: string, indent: number): string {
+	return text.split('\n').map((line) => ' '.repeat(indent) + line).join('\n');
 }
 
 function _handleArrayTypes(data: Array<any>) {
