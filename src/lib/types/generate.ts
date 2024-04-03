@@ -29,40 +29,36 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
   return types;
 }
 
-function AddPageData(){
-	const utilities = `
-	type QueryType = {
-    query: string;
-    select?: string[]
-    | Record<string, string | number | boolean | QueryType>
-};
+export function AddPageData() {
+	const queryType = `type QueryType = {
+query: string;
+select?: string[] | Record<string, string | number | boolean | QueryType>;
+};`;
 
-type QueryArrayType = QueryType[];
+	const queryArrayType = `type QueryArrayType = QueryType[];`;
 
-type ExcludeQueries<T> = {
-    [K in keyof T]: T[K] extends QueryArrayType | QueryType ? never : T[K]
-};
+	const excludeQueries = `type ExcludeQueries<T> = {
+[K in keyof T]: T[K] extends QueryArrayType | QueryType ? never : T[K];
+};`;
 
-type RemoveNever<T> = T extends any[] 
-    ? RemoveNever<T[number]>[]
-    : Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;
+	const removeNever = `type RemoveNever<T> = T extends any[] 
+? RemoveNever<T[number]>[]
+: Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;`;
 
-type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>>>;
+	const parentData = `type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>>>;`;
 
+	const kqlData = `type KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>;`;
 
-	`
-	const data = `\ntype KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>`
+	const result = `${queryType}\n${queryArrayType}\n${excludeQueries}\n${removeNever}\n${parentData}\n${kqlData}`;
 
-	const result = `${utilities} ${data}`
-
-	return _formatText(result, 2);
+	return result;
 }
 
-function _formatText(text: string, indent: number): string {
+export function _formatText(text: string, indent: number): string {
 	return text.split('\n').map((line) => ' '.repeat(indent) + line).join('\n');
 }
 
-function _handleArrayTypes(data: Array<any>) {
+export function _handleArrayTypes(data: Array<any>) {
 	const newArray = data.map((value: any) => {
 		if (_isObject(value)) {
 			const newMap = _setDeepMap(new Map(Object.entries(value)));
@@ -75,11 +71,11 @@ function _handleArrayTypes(data: Array<any>) {
 	return newArray;
 }
 
-function _isObject(value: any): boolean {
+export function _isObject(value: any): boolean {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function _setDeepMap(data: any): any {
+export function _setDeepMap(data: any): any {
 	const deepMap = new Map();
 
 	for (const [key, value] of data) {
@@ -104,7 +100,7 @@ export function _writeRoutePaths(route: string) {
 	}
 }
 
-function _getKirbyTypesPath(route: string) {
+export function _getKirbyTypesPath(route: string) {
 	const typesPath = path.join(process.cwd(), '.svelte-kit', 'types', 'src', 'routes', `${route}`);
 	return typesPath;
 }
