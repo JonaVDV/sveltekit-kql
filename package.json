@@ -2,6 +2,11 @@
   "name": "sveltekit-kql",
   "version": "0.0.1",
   "license": "MIT",
+  "author": {
+    "name": "Jona van der Vlist",
+    "email": "j.vdv@outlook.com"
+  },
+  "description": "SvelteKit adapter for Kirby query language (kql)",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && bun run package",
