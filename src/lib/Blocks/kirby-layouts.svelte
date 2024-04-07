@@ -6,7 +6,7 @@
 	interface KirbyLayoutColumn {
 		id: string;
 		width: `${string}/${string}` | string;
-		blocks: KirbyBlock[];
+		blocks: KirbyBlock<any>[];
 	}
 
 	interface KirbyLayout {
@@ -32,7 +32,7 @@
 <div>
 	
 	{#each layouts as { id, columns, attrs }}
-		<section {...$$restProps} class="grid margin-xl" {id}>
+		<section {...$$restProps} class="grid margin-xl {$$restProps['class']}" {id}>
 			{#each columns as column}
 				<div class="column" style="--columns: {span(column.width)};">
 					<KirbyComponents blocks={column.blocks} class="text" />
