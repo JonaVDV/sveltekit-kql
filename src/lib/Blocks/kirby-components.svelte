@@ -9,6 +9,14 @@
   }
 
   export let blocks: $$Props['blocks'];
+
+  if (!Array.isArray(blocks)) {
+    throw new TypeError('Blocks must be an array');
+  }
+
+  if (!$components) {
+    throw new Error('No components provided');
+  }
   
 </script>
 
