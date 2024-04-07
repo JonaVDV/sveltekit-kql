@@ -19,8 +19,15 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
 
     if (value instanceof Map) {
       types += `${indentStr}${formattedKey}: {\n${_generateTypes(value, indent + 2)}${indentStr}}\n`;
-    } else if (Array.isArray(value) && value[0] instanceof Map) { // Check if the first element of the array is a Map
-      types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(value[0], indent + 2)}${indentStr}}>\n`;
+    } else if (Array.isArray(value)) {
+      if (value[0] instanceof Map) { // Check if the first element of the array is a Map
+        types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(value[0], indent + 2)}${indentStr}}>\n`;
+      } else if (_isObject(value[0])) { // Check if the first element of the array is an object
+        const mapValue = _setDeepMap(new Map(Object.entries(value[0])));
+        types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(mapValue, indent + 2)}${indentStr}}>\n`;
+      } else { // The array contains primitive types
+        types += `${indentStr}${formattedKey}: ${typeof value[0]}[];\n`;
+      }
     } else {
       types += `${indentStr}${formattedKey}: ${typeof value};\n`;
     }
@@ -30,6 +37,8 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
 }
 
 export function AddPageData() {
+	const expand = 'type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;';
+
 	const queryType = `type QueryType = {
 query: string;
 select?: string[] | Record<string, string | number | boolean | QueryType>;
@@ -47,9 +56,9 @@ select?: string[] | Record<string, string | number | boolean | QueryType>;
 
 	const parentData = `type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>>>;`;
 
-	const kqlData = `type KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>;`;
+	const kqlData = `export type KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>;`;
 
-	const result = `${queryType}\n${queryArrayType}\n${excludeQueries}\n${removeNever}\n${parentData}\n${kqlData}`;
+	const result = `${expand}\n${queryType}\n${queryArrayType}\n${excludeQueries}\n${removeNever}\n${parentData}\n${kqlData}`;
 
 	return result;
 }
@@ -105,9 +114,10 @@ export function _getKirbyTypesPath(route: string) {
 	return typesPath;
 }
 
-export function writeTypes(types: string, route: string) {
-	const expand = 'type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;\n';
-	const type = `${expand}export type Data = {\n${types}};\n${AddPageData()}`;
-	const typesPath = path.join(_getKirbyTypesPath(route), `$kql.d.ts`);
-	fs.writeFileSync(typesPath, type);
+export function writeTypes(types: string, route: string, dataType: 'Layout' | 'Page' ,filename: string = '$kql') {
+	const typePrefix = `type Data = {\n${types}};`
+	const generalTypes = AddPageData();
+		
+	const typesPath = path.join(_getKirbyTypesPath(route), `${filename}.d.ts`);
+	fs.writeFileSync(typesPath, typePrefix + generalTypes);
 }
