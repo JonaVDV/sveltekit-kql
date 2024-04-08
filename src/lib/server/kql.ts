@@ -70,16 +70,24 @@ class Kql<TCallback> {
 				delete (loadResult as { [key: string]: any })[key];
 			}
 		}
-
-		const jsonTypes = getJsonTypes(mergedResults);
-		const typeString = _generateTypes(jsonTypes, 2);
-		_writeRoutePaths(event.route.id ?? '');
-		writeTypes(typeString, event.route.id ?? '');
+		const route = event.route.id ?? '/';
+		this.generateTypes(event, route);
 
 		return {
 			...mergedResults,
 			...loadResult
 		};
+	}
+
+	private async generateTypes(event: ServerLoadEvent, route: string){
+		const parentData = await event.parent()
+		const parentJsonTypes = getJsonTypes(parentData);
+		const pageJsonTypes = getJsonTypes(this.mergeResults());
+		const pageTypes = _generateTypes(pageJsonTypes, 2);
+		const parentTypes = _generateTypes(parentJsonTypes, 2);
+
+		writeTypes(pageTypes, parentTypes, route)
+		
 	}
 
 	/**

@@ -10,30 +10,33 @@ export function getJsonTypes(data: any): any {
 }
 
 export function _generateTypes(data: Map<string, any>, indent = 0): string {
-  let types = '';
-  const indentStr = ' '.repeat(indent);
+	let types = '';
+	const indentStr = ' '.repeat(indent);
 
-  for (const [key, value] of data) {
-    // Add quotes around the key if it doesn't have them
-    let formattedKey = key.includes('"') ? `'${key}'` : `"${key}"`;
+	for (const [key, value] of data) {
+		// Add quotes around the key if it doesn't have them
+		let formattedKey = key.includes('"') ? `'${key}'` : `"${key}"`;
 
-    if (value instanceof Map) {
-      types += `${indentStr}${formattedKey}: {\n${_generateTypes(value, indent + 2)}${indentStr}}\n`;
-    } else if (Array.isArray(value)) {
-      if (value[0] instanceof Map) { // Check if the first element of the array is a Map
-        types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(value[0], indent + 2)}${indentStr}}>\n`;
-      } else if (_isObject(value[0])) { // Check if the first element of the array is an object
-        const mapValue = _setDeepMap(new Map(Object.entries(value[0])));
-        types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(mapValue, indent + 2)}${indentStr}}>\n`;
-      } else { // The array contains primitive types
-        types += `${indentStr}${formattedKey}: ${typeof value[0]}[];\n`;
-      }
-    } else {
-      types += `${indentStr}${formattedKey}: ${typeof value};\n`;
-    }
-  }
+		if (value instanceof Map) {
+			types += `${indentStr}${formattedKey}: {\n${_generateTypes(value, indent + 2)}${indentStr}}\n`;
+		} else if (Array.isArray(value)) {
+			if (value[0] instanceof Map) {
+				// Check if the first element of the array is a Map
+				types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(value[0], indent + 2)}${indentStr}}>\n`;
+			} else if (_isObject(value[0])) {
+				// Check if the first element of the array is an object
+				const mapValue = _setDeepMap(new Map(Object.entries(value[0])));
+				types += `${indentStr}${formattedKey}: Array<{\n${_generateTypes(mapValue, indent + 2)}${indentStr}}>\n`;
+			} else {
+				// The array contains primitive types
+				types += `${indentStr}${formattedKey}: ${typeof value[0]}[];\n`;
+			}
+		} else {
+			types += `${indentStr}${formattedKey}: ${typeof value};\n`;
+		}
+	}
 
-  return types;
+	return types;
 }
 
 export function AddPageData() {
@@ -54,17 +57,21 @@ select?: string[] | Record<string, string | number | boolean | QueryType>;
 ? RemoveNever<T[number]>[]
 : Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;`;
 
-	const parentData = `type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>>>;`;
+	const parentData = `type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>> & KQLParentData>;`;
 
 	const kqlData = `export type KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>;`;
+	const kqlLayoutData = `export type KQLLayoutData = ParentData`
 
-	const result = `${expand}\n${queryType}\n${queryArrayType}\n${excludeQueries}\n${removeNever}\n${parentData}\n${kqlData}`;
+	const result = `${expand}\n${queryType}\n${queryArrayType}\n${excludeQueries}\n${removeNever}\n${parentData}\n${kqlData}\n${kqlLayoutData}`;
 
 	return result;
 }
 
 export function _formatText(text: string, indent: number): string {
-	return text.split('\n').map((line) => ' '.repeat(indent) + line).join('\n');
+	return text
+		.split('\n')
+		.map((line) => ' '.repeat(indent) + line)
+		.join('\n');
 }
 
 export function _handleArrayTypes(data: Array<any>) {
@@ -114,10 +121,14 @@ export function _getKirbyTypesPath(route: string) {
 	return typesPath;
 }
 
-export function writeTypes(types: string, route: string, dataType: 'Layout' | 'Page' ,filename: string = '$kql') {
-	const typePrefix = `type Data = {\n${types}};`
+export function writeTypes(
+	pageTypes: string,
+	parentTypes: string,
+	route: string,
+) {
+	const typePrefix = `type Data = {\n${pageTypes}};\n\ntype KQLParentData = {\n${parentTypes}};\n\n`;
 	const generalTypes = AddPageData();
-		
-	const typesPath = path.join(_getKirbyTypesPath(route), `${filename}.d.ts`);
+
+	const typesPath = path.join(_getKirbyTypesPath(route), `$kql.d.ts`);
 	fs.writeFileSync(typesPath, typePrefix + generalTypes);
 }
