@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto'
 
 export function getJsonTypes(data: any): any {
 	// convert the data to a map
@@ -42,23 +43,13 @@ export function _generateTypes(data: Map<string, any>, indent = 0): string {
 export function AddPageData() {
 	const expand = 'type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;';
 
-	const queryType = `type QueryType = {
-query: string;
-select?: string[] | Record<string, string | number | boolean | QueryType>;
-};`;
-
+	const queryType = `type QueryType = {query: string;select?: string[] | Record<string, string | number | boolean | QueryType>;};`;
 	const queryArrayType = `type QueryArrayType = QueryType[];`;
 
-	const excludeQueries = `type ExcludeQueries<T> = {
-[K in keyof T]: T[K] extends QueryArrayType | QueryType ? never : T[K];
-};`;
-
-	const removeNever = `type RemoveNever<T> = T extends any[] 
-? RemoveNever<T[number]>[]
-: Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;`;
+	const excludeQueries = `type ExcludeQueries<T> = {[K in keyof T]: T[K] extends QueryArrayType | QueryType ? never : T[K];};`;
+	const removeNever = `type RemoveNever<T> = T extends any[] ? RemoveNever<T[number]>[] : Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;`;
 
 	const parentData = `type ParentData = Expand<RemoveNever<ExcludeQueries<Omit<import('./$types').PageParentData, keyof import('./$types').PageServerData>>> & KQLParentData>;`;
-
 	const kqlData = `export type KQLData = Expand<RemoveNever<ExcludeQueries<import('./$types').PageServerData>> & ParentData & Data>;`;
 	const kqlLayoutData = `export type KQLLayoutData = ParentData`
 
@@ -126,9 +117,21 @@ export function writeTypes(
 	parentTypes: string,
 	route: string,
 ) {
-	const typePrefix = `type Data = {\n${pageTypes}};\n\ntype KQLParentData = {\n${parentTypes}};\n\n`;
-	const generalTypes = AddPageData();
-
+	const newTypes = `type Data = {\n${pageTypes}};\n\ntype KQLParentData = {\n${parentTypes}};\n\n` + AddPageData();
+	
 	const typesPath = path.join(_getKirbyTypesPath(route), `$kql.d.ts`);
-	fs.writeFileSync(typesPath, typePrefix + generalTypes);
+	if (fs.existsSync(typesPath)) {
+		const existingTypes = fs.readFileSync(typesPath, 'utf-8');
+
+		const hash = crypto.createHash('sha256').update(newTypes).digest('hex');
+		const existingHash = crypto.createHash('sha256').update(existingTypes).digest('hex');	
+
+		if (hash === existingHash) {
+			console.log(`Types for ${route} already exist. Aborting type generation.`);
+			
+			return;
+		}
+	}
+	fs.writeFileSync(typesPath, newTypes);
+		
 }
