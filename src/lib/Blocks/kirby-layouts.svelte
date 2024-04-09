@@ -2,6 +2,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { KirbyBlock } from 'kirby-types';
 	import KirbyComponents from './kirby-components.svelte';
+	import type { ComponentType, SvelteComponent } from 'svelte';
 
 	interface KirbyLayoutColumn {
 		id: string;
@@ -17,11 +18,25 @@
 
 	interface $$Props extends HTMLAttributes<HTMLElement> {
 		layouts: KirbyLayout[];
+		customLayout?: ComponentType<SvelteComponent<{columns: KirbyLayoutColumn[], id: string, attrs: KirbyLayout['attrs']} & Record<string, any>>>
+		// css props
+		"--grid-gap"?: string;
 	}
 
-	export let layouts: $$Props['layouts'];
+	export let layouts: NonNullable<$$Props['layouts']>;
+	/**
+	 * **Custom layout component**
+	 * 
+	 * usefull for if you want to render a custom layout in place of the default layout
+	 * 
+	 */
+	export let customLayout: $$Props['customLayout'] = undefined;
+
+	
+
+
 	function span(width: string, columns = 12) {
-		const [a, b] = width.split('/');		
+		const [a, b] = width.split('/');
 		return columns * (Number.parseInt(a) / Number.parseInt(b));
 	}
 
@@ -30,14 +45,39 @@
 </script>
 
 <div>
-	
 	{#each layouts as { id, columns, attrs }}
-		<section {...$$restProps} class="grid margin-xl {$$restProps['class']}" {id}>
+		<section {...$$restProps} class="{$$restProps['class'] ?? ''}" class:grid-auto-columns={columns.length > 1 ?? null} {id}>
 			{#each columns as column}
 				<div class="column" style="--columns: {span(column.width)};">
-					<KirbyComponents blocks={column.blocks} class="text" />
+					<slot name="components">
+						<KirbyComponents blocks={column.blocks} class="text" />
+					</slot>
 				</div>
 			{/each}
 		</section>
+
+		{#if customLayout}
+			<svelte:component this={customLayout} {id} {columns} {attrs} {$$restProps}/>
+		{/if}
 	{/each}
 </div>
+
+
+<style>
+	.grid-auto-columns {
+		display: grid;
+		grid-auto-columns: 1fr;
+		gap: var(--grid-gap, 2rem);
+		margin-block: calc(var(--grid-gap, 2rem) / 2);
+
+	}
+
+
+	@media (min-width: 768px) {
+		.grid-auto-columns {
+			grid-auto-flow: column;
+		}
+	}
+
+
+</style>
