@@ -154,7 +154,7 @@ class Kql<TCallback> {
 }
 /**
  * Creates a KQL function. This function can be used to fetch data from Kirby using the KQL API.
- *
+ * 
  * @example
  *
  * import { createKql } from 'sveltekit-kql';
@@ -179,7 +179,8 @@ class Kql<TCallback> {
  *     }
  * });
  *
- *
+ * @remarks
+ * the queries from the load function will not be included in the final result
  *
  * @param loadFunction The load function that returns the data to be fetched and the queries to be executed
  * @param debug if set to true, the merged results will be logged to the console for debugging purposes
