@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import type { KirbyBlock } from "kirby-types";
+	import type { KirbyBlock } from "$lib";
 
   interface $$Props extends KirbyBlock<'heading'> {
     text: string;
