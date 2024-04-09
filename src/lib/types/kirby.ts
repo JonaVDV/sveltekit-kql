@@ -1,1 +1,1 @@
-export type {KirbyBlock, KirbyQuery, KirbyQuerySchema} from 'kirby-types'
+export type {KirbyBlock, KirbyQuery, KirbyQuerySchema, KirbyQueryResponse, KirbyLayout, KirbyLayoutColumn} from 'kirby-types'
