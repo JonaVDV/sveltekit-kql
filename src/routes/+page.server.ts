@@ -1,6 +1,4 @@
-import type { PageServerLoad } from './$types.d.ts';
 import { createKql } from '$lib/server';
-import type { KirbyQuerySchema } from 'kirby-types';
 export const load = createKql(async () => {
 	const HomeQuery = {
 		query: 'page("home")',
