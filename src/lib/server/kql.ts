@@ -79,15 +79,14 @@ class Kql<TCallback> {
 		};
 	}
 
-	private async generateTypes(event: ServerLoadEvent, route: string){
-		const parentData = await event.parent()
+	private async generateTypes(event: ServerLoadEvent, route: string) {
+		const parentData = await event.parent();
 		const parentJsonTypes = getJsonTypes(parentData);
 		const pageJsonTypes = getJsonTypes(this.mergeResults());
 		const pageTypes = _generateTypes(pageJsonTypes, 2);
 		const parentTypes = _generateTypes(parentJsonTypes, 2);
 
-		writeTypes(pageTypes, parentTypes, route)
-		
+		writeTypes(pageTypes, parentTypes, route);
 	}
 
 	/**
@@ -171,12 +170,13 @@ class Kql<TCallback> {
  * 			// description: true,
  * 			headline: true,
  * 			subheadline: true
- * 		}
+ * 		}; 
+ *  };
  *
- *  return {
- * 		queries: [HomeQuery],
- * 		yourData: 'yourData'
- * 	};
+ *     return {
+ *         queries: [HomeQuery],
+ *         additionalData: 'data'
+ *     }
  * });
  *
  *
@@ -190,5 +190,6 @@ export function createKql<TCallback>(
 	debug = false
 ) {
 	const kqlInstance = new Kql(loadFunction, debug);
+	// bind the kql function to the instance so it can be called from the outside
 	return kqlInstance.kql.bind(kqlInstance);
 }
