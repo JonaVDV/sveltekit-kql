@@ -31,16 +31,6 @@
 	 * 
 	 */
 	export let customLayout: $$Props['customLayout'] = undefined;
-
-	
-
-
-	function span(width: string, columns = 12) {
-		const [a, b] = width.split('/');
-		return columns * (Number.parseInt(a) / Number.parseInt(b));
-	}
-
-	
 	
 </script>
 
@@ -48,7 +38,7 @@
 	{#each layouts as { id, columns, attrs }}
 		<section {...$$restProps} class="{$$restProps['class'] ?? ''}" class:grid-auto-columns={columns.length > 1 ?? null} {id}>
 			{#each columns as column}
-				<div class="column" style="--columns: {span(column.width)};">
+				<div>
 					<slot name="components">
 						<KirbyComponents blocks={column.blocks} class="text" />
 					</slot>
@@ -73,7 +63,7 @@
 	}
 
 
-	@media (min-width: 768px) {
+	@media (min-width: 60rem) {
 		.grid-auto-columns {
 			grid-auto-flow: column;
 		}
