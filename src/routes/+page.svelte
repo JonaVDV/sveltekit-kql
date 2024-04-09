@@ -1,8 +1,9 @@
 <script lang="ts">
-	export let data;
+	import type { KQLData } from "./$kql";
 
-	console.log(data);
-	$: photographyData = (data as { [key: string]: any })['page("photography").children.listed'].result;
+	export let data: KQLData;
+
+	$: photographyData = data['page("photography").children.listed'].result;
   
 </script>
 
@@ -14,8 +15,8 @@
 					<figure>
 						<img
 							loading="lazy"
-							src={album?.cover?.resized?.url ?? album?.images?.[0]?.resized?.url}
-							alt={album?.cover?.alt ?? album?.images?.[0]?.alt}
+							src={album.cover.resized.url ?? album.image.resized.url}
+							alt={album.cover.alt ?? album.image.alt}
 						/>
 						<figcaption>
 							<span>
