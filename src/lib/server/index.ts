@@ -1,1 +1,1 @@
-export * from './kql.js'
+export { kqlLoad } from './kql-load';

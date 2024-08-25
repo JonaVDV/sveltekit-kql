@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { KQLData } from './$kql';
+	// import type { KQLData } from './$kql';
 	import { KirbyLayouts } from '$lib';
-	export let data: KQLData;
+	export let data;
 
-	$: layouts = data['page("/about")'].result.layouts;
+	$: layouts = data.kqlData.layouts;
 
-	$: aboutPage = data['page("/about")'].result;
+	$: aboutPage = data.kqlData;
 </script>
 
 <KirbyLayouts --grid-gap="3rem" {layouts} />

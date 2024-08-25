@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { KQLData } from "./$kql";
 
-	export let data: KQLData;
+	export let data;
 
-	$: photographyData = data['page("photography").children.listed'].result;
+	$: photographyData = data.photography.kqlData;
   
 </script>
 

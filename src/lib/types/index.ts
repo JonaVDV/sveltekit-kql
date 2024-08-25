@@ -1,2 +1,1 @@
-export * from './generate'
-export * from './kirby'
+// export {} from 'kirby-types';

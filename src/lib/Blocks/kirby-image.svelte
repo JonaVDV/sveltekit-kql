@@ -21,7 +21,7 @@
 	export const location: $$Props['location'] = '';
 	export const src: $$Props['src'] = '';
 
-	let images = $page.data['page("/about")'].result.images;
+	let images = $page.data.kqlData.images;
 
 	if (!alt) {
 		console.warn('The alt attribute is missing on the image');
