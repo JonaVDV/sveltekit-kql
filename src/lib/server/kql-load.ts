@@ -2,7 +2,7 @@ import type { ServerLoad, ServerLoadEvent } from '@sveltejs/kit';
 import { kqlHandler, type KQLClientOptions } from './kql-handler';
 import type { KirbyQueryRequest } from 'kirby-types';
 
-interface KQLLoadOptions extends KQLClientOptions {
+export interface KQLLoadOptions extends KQLClientOptions {
 	/**
 	 * allows you to transform the data returned from the KQL query or add additional data
 	 * @param data - The data returned from the KQL query
