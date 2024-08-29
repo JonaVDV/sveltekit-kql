@@ -44,7 +44,9 @@ async function handleAuth(authMethod: KQLClientOptions['authentication']) {
 		}
 		return (
 			'Basic ' +
-			btoa(`${kirbyEnvKeys.KIRBY_HEADLESS_API_USER}:${kirbyEnvKeys.KIRBY_HEADLESS_API_PASSWORD}`)
+			Buffer.from(
+				`${kirbyEnvKeys.KIRBY_HEADLESS_API_USER}:${kirbyEnvKeys.KIRBY_HEADLESS_API_PASSWORD}`
+			).toString('base64')
 		);
 	}
 
