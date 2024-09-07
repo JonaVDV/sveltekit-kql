@@ -9,7 +9,7 @@ export interface KQLLoadOptions extends KQLClientOptions {
 	 * @returns The transformed data
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- We don't know the shape of the data since it's json
-	transform?: (data: any) => any;
+	transform?: (data: any, event: ServerLoadEvent) => any;
 }
 
 /**
@@ -19,9 +19,9 @@ export interface KQLLoadOptions extends KQLClientOptions {
  * @returns A server load function that fetches the KQL data and additional data when specified
  */
 export function kqlLoad(query: KirbyQueryRequest, options: KQLLoadOptions = {}) {
-	return async ({ fetch, depends }: ServerLoadEvent) => {
+	return async (event: ServerLoadEvent) => {
 		const { transform, ...clientOptions } = options;
-
+		const { fetch, depends } = event;
 		// Create a unique dependency key for this query
 		const dependencyKey = `kql:${JSON.stringify(query.query)}` as const;
 		depends(dependencyKey);
@@ -29,7 +29,7 @@ export function kqlLoad(query: KirbyQueryRequest, options: KQLLoadOptions = {}) 
 		const data = await kqlHandler(query, { ...clientOptions, fetch });
 
 		return {
-			kqlData: transform ? transform(data) : data.result,
+			kqlData: transform ? transform(data, event) : data.result,
 			code: data.code,
 			status: data.status
 		};
