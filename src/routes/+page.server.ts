@@ -1,4 +1,7 @@
 import { kqlLoad } from '$lib/server';
+import { createMultiQueryLoad } from '$lib/server/multi-query';
+import type { KQLQueryData } from '$lib/types/query';
+import type { KirbyQuerySchema } from 'kirby-types';
 const HomeQuery = {
 	query: 'page("home")',
 	select: {
@@ -9,7 +12,7 @@ const HomeQuery = {
 		headline: true,
 		subheadline: true
 	}
-};
+} satisfies KirbyQuerySchema;
 
 const photographyQuery = {
 	query: 'page("photography").children.listed',
@@ -41,15 +44,13 @@ const photographyQuery = {
 			}
 		}
 	}
-};
+} satisfies KirbyQuerySchema;
 
-export const load = async ({fetch}) => {
-	const home = kqlLoad(HomeQuery);
-	const photography = kqlLoad(photographyQuery, {
-		fetch
-	});
-	return {
-		home,
-		photography
-	};
-};
+export const load = createMultiQueryLoad({
+	photography: {
+		query: photographyQuery
+	},
+	home: {
+		query: HomeQuery
+	}
+});
