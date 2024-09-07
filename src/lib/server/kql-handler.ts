@@ -24,6 +24,7 @@ async function getKirbyEnv() {
 }
 
 async function handleAuth(authMethod: KQLClientOptions['authentication']) {
+	// TODO: surely there's a better way to do this
 	const kirbyEnvKeys = await getKirbyEnv();
 	if (!kirbyEnvKeys.KIRBY_HEADLESS_API_URL) {
 		throw new Error('KIRBY_HEADLESS_API_URL is not defined in the .env file');
