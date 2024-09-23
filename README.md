@@ -1,7 +1,7 @@
 # Sveltekit-KQL
 
 **waring: this library is still a work in progress and is not yet ready for production use.**
-Sveltekit-KQL is a library that allows you to use KQL (Kirby Query Language) [kirby cms](https://getkirby.com/) CMS in your SvelteKit project. this library provides a wrapper for [load functions](https://kit.svelte.dev/docs/load) in SvelteKit.
+Sveltekit-KQL is a library that allows you to use KQL (Kirby Query Language) for [kirby cms](https://getkirby.com/) CMS in your SvelteKit project. this library provides a wrapper for [load functions](https://kit.svelte.dev/docs/load) in SvelteKit.
 
 ## Installation
 
