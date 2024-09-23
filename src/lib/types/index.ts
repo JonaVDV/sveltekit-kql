@@ -1,1 +1,1 @@
-// export {} from 'kirby-types';
+export type * from 'kirby-types';
