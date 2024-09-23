@@ -3,7 +3,7 @@ import { createMultiQueryLoad } from '$lib/server/multi-query';
 import type { KQLQueryData } from '$lib/types/query';
 import type { KirbyQuerySchema } from 'kirby-types';
 const HomeQuery = {
-	query: 'page("home")',
+	query: page('home'),
 	select: {
 		id: true,
 		title: true,
@@ -12,10 +12,10 @@ const HomeQuery = {
 		headline: true,
 		subheadline: true
 	}
-} satisfies KirbyQuerySchema;
+};
 
 const photographyQuery = {
-	query: 'page("photography").children.listed',
+	query: page('photography').children().listed(),
 	select: {
 		id: true,
 		title: true,
@@ -32,7 +32,7 @@ const photographyQuery = {
 			}
 		},
 		image: {
-			query: 'page.images.first',
+			query: page().images().first(),
 			select: {
 				resized: {
 					query: 'file.resize(1024, 1024)',
@@ -44,7 +44,7 @@ const photographyQuery = {
 			}
 		}
 	}
-} satisfies KirbyQuerySchema;
+};
 
 export const load = createMultiQueryLoad({
 	photography: {

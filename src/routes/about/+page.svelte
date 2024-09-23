@@ -6,6 +6,9 @@
 	$: layouts = data.kqlData.layouts;
 
 	$: aboutPage = data.kqlData;
+
+
+	$: console.log(data);
 </script>
 
 <KirbyLayouts --grid-gap="3rem" {layouts} />

@@ -17,10 +17,11 @@ export function createMultiQueryLoad(config: MultiQueryConfig) {
 
 		for (const [key, { query, options }] of Object.entries(config)) {
 			const { transform, ...clientOptions } = options || {};
-			const dependencyKey = `kql:${JSON.stringify(query.query)}` as const;
+			const transformedQuery = transformQuery(query);
+			const dependencyKey = `kql:${JSON.stringify(transformedQuery.query)}` as const;
 			depends(dependencyKey);
 
-			const data = await kqlHandler(query, {
+			const data = await kqlHandler(transformedQuery, {
 				...clientOptions,
 				fetch
 			});
@@ -29,4 +30,14 @@ export function createMultiQueryLoad(config: MultiQueryConfig) {
 		}
 		return Object.fromEntries(results);
 	};
+}
+
+function transformQuery(query: any) {
+	const transformedQuery = {
+		query: query.query.toString(),
+		select: query.select
+	};
+	console.log(transformedQuery);
+
+	return transformedQuery;
 }

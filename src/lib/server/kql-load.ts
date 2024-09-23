@@ -22,11 +22,12 @@ export function kqlLoad(query: KirbyQueryRequest, options: KQLLoadOptions = {}) 
 	return async (event: ServerLoadEvent) => {
 		const { transform, ...clientOptions } = options;
 		const { fetch, depends } = event;
+		const transformedQuery = transformQuery(query);
 		// Create a unique dependency key for this query
-		const dependencyKey = `kql:${JSON.stringify(query.query)}` as const;
+		const dependencyKey = `kql:${JSON.stringify(transformedQuery.query)}` as const;
 		depends(dependencyKey);
 
-		const data = await kqlHandler(query, { ...clientOptions, fetch });
+		const data = await kqlHandler(transformedQuery, { ...clientOptions, fetch });
 
 		return {
 			kqlData: transform ? transform(data, event) : data.result,
@@ -34,4 +35,14 @@ export function kqlLoad(query: KirbyQueryRequest, options: KQLLoadOptions = {}) 
 			status: data.status
 		};
 	};
+}
+
+function transformQuery(query: any) {
+	const transformedQuery = {
+		query: query.query.toString(),
+		select: query.select
+	};
+	console.log(transformedQuery);
+
+	return transformedQuery;
 }
