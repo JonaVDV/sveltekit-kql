@@ -601,16 +601,7 @@ const queryWithFunctions = {
 		}
 	}
 };
-
-// create a type that is an if statement
-
-type GetFieldType<T, K extends keyof any> = K extends keyof T ? T[K] : GetPropTypeFromQuery<T>;
-
-type GetPropTypeFromQuery<T> = T extends { query: infer Q } ? Q : {};
-
-type IsQuery<T> = T extends { query: infer Q } ? true : false;
-
-type GetSelectKeys<T> = T extends { select: infer S } ? S : never;
+type GetSelectKeys<T> = T extends { select: infer S } ? S : T;
 
 /**
  * Prettify the type mainly in a way that ensures that the leftovers are removed.
@@ -633,23 +624,51 @@ type GetSelectKeys<T> = T extends { select: infer S } ? S : never;
  * }
  */
 type ExtractPropsFromSelect<T> = T extends { select: infer S } ? { [K in keyof S]: S[K] } : T;
+/**
+ * Get the key from the query or if it is not there, return the type of the __extra property
+ */
+type GetKeyFromQueryOrExtra<T extends { __extra: any }, K> = K extends keyof T
+	? T[K]
+	: T['__extra'];
+/**
+ * used to check if a value of a key is a boolean if it is, we return true, otherwise false
+ */
+type IsKeyBooleanType<TObject extends Record<string, any>, Key> = Key extends keyof TObject
+	? TObject[Key] extends boolean
+		? true
+		: false
+	: false;
 
-type MapToInferredQueryType<T extends KQLQuery> = ExtractPropsFromSelect<{
-	[K in keyof GetSelectKeys<T>]: GetSelectKeys<T>[K] extends { query: infer Q }
-		? MapToInferredQueryType<GetSelectKeys<T>[K]>
-		: GetFieldType<GetSelectKeys<T>, K> extends boolean
-			? keyof GetSelectKeys<T> extends keyof { query: infer Q }
-				? Q[keyof Q]
-				: string
-			: GetFieldType<GetSelectKeys<T>, K>;
+/**
+ * gets the __default property from an object if it exists, otherwise it returns the object itself
+ */
+type ExtractDefault<T> = T extends { __default: infer D } ? D : T;
+
+type CompareAndGetFromQuery<
+	TSelectObject extends Record<string, any>,
+	Key,
+	Query extends { __extra: any }
+> = Key extends keyof TSelectObject
+	? IsKeyBooleanType<TSelectObject, Key> extends true
+		? ExtractDefault<GetKeyFromQueryOrExtra<Query, Key>>
+		: TSelectObject[Key] extends Record<string, any>
+			? GetSelectKeys<TSelectObject[Key]> extends { query: infer NestedQuery }
+				? InferredQueryTypeMapper<{ query: NestedQuery }>
+				: TSelectObject[Key]
+			: TSelectObject[Key]
+	: unknown;
+
+type InferredQueryTypeMapper<
+	T extends KQLQuery,
+	SelectKeys = GetSelectKeys<T>
+> = ExtractPropsFromSelect<{
+	[K in keyof SelectKeys]: CompareAndGetFromQuery<T['select'], K, T['query']>;
 }>;
 //   ^?
 
 type KQLQuery = {
 	query: any;
-	select?: {
-		[key: string]: any;
-	};
+	select?: any;
 	models?: any;
 	pagination?: {
 		limit?: number;
@@ -657,8 +676,20 @@ type KQLQuery = {
 	};
 };
 
-type Content2 = Test<typeof queryWithFunctions>;
-//    ^?
-let test = {} as Content2;
-let test2 = {} as MapToInferredQueryType<typeof queryWithFunctions>;
-// test.pages;
+/**
+ * KQLQueryTypeResolver takes a KQLQuery type and transforms it into a type
+ * with inferred properties based on the query's select keys.
+ */
+type KQLQueryTypeResolver<T extends KQLQuery> = ExtractPropsFromSelect<{
+	// Iterate over each key in the select object of the query
+	[K in keyof GetSelectKeys<T>]: GetSelectKeys<T>[K] extends { query: infer Q } // If the select key has a nested query, recursively map it
+		? InferredQueryTypeMapper<GetSelectKeys<T>[K]>
+		: // If the select key is a boolean, get the default value from the query or extra property
+			IsKeyBooleanType<GetSelectKeys<T>, K> extends true
+			? ExtractDefault<GetKeyFromQueryOrExtra<T['query'], K>>
+			: // Otherwise, default to string
+				string;
+}>;
+
+let test2 = {} as InferredQueryTypeMapper<typeof queryWithFunctions>;
+let test3 = {} as KQLQueryTypeResolver<typeof queryWithFunctions>;
