@@ -40,6 +40,7 @@ type Validators =
 	| 'uuid';
 
 export interface Field {
+	__default: string;
 	/**Escapes the field value to be safely used in HTML templates without the risk of XSS attacks @param context - The context to escape the field value for @alias `esc`*/
 	escape: (context: EscapeContext) => Field;
 	/**alias for escape */
