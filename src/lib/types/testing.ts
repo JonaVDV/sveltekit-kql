@@ -1,83 +1,8 @@
-import type { SiteModel } from './models';
-
-const testingQuery = {
-	query: page('home'),
-	select: {
-		title: true
-	}
-};
-
-console.log(JSON.stringify(testingQuery));
-
-interface allowedMethodsForChildren {
-	children: any;
-	childrenAndDrafts: any;
-	draft: any;
-	drafts: any;
-	find: any;
-	findPageOrDraft: any;
-	grandChildren: any;
-	hasChildren: any;
-	hasDrafts: any;
-	hasListedChildren: any;
-	hasUnlistedChildren: any;
-	index: any;
-	search: any;
-}
-
-interface allowedMethodsForFiles {
-	audio: any;
-	code: any;
-	documents: any;
-	file: any;
-	files: any;
-	hasAudio: any;
-	hasCode: any;
-	hasDocuments: any;
-	hasFiles: any;
-	hasImages: any;
-	hasVideos: any;
-	image: any;
-	images: any;
-	videos: any;
-}
-
-interface allowedMethodsForModels {
-	apiUrl: any;
-	blueprint: any;
-	content: any;
-	dragText: any;
-	exists: any;
-	id: any;
-	mediaUrl: any;
-	modified: any;
-	permissions: any;
-	panel: any;
-	permalink: any;
-	previewUrl: any;
-	url: any;
-}
-
-interface AllowedMethodsForSiblings {
-	indexOf: any;
-	next: any;
-	nextAll: any;
-	prev: any;
-	prevAll: any;
-	siblings: any;
-	hasNext: any;
-	hasPrev: any;
-	isFirst: any;
-	isLast: any;
-	isNth: any;
-}
-
-interface AllowedMethodsForParents {
-	parent: any;
-	parentId: any;
-	parentModel: any;
-	site: any;
-}
+// import type {  } from './models';
+import { kirbyContext } from '$lib/server/utils';
+import * as HS from 'hotscript';
+import type { Field } from './field';
+import type { KQLQueryData } from './query';
 
 interface PageToArray {
 	children: any;
@@ -103,6 +28,7 @@ export interface Page
 		allowedMethodsForModels,
 		AllowedMethodsForSiblings,
 		AllowedMethodsForParents {
+	__extra: Field;
 	apiUrl: (relative: boolean | true) => string;
 	blueprint: () => Blueprint;
 	blueprints: (inSection: string) => Array<Blueprint>;
@@ -110,7 +36,7 @@ export interface Page
 	exists: () => boolean;
 	hasTemplate: () => boolean;
 	id: () => string;
-	intendedTemplate: () => Template;
+	// intendedTemplate: () => Template;
 	isDraft: () => boolean;
 	isErrorPage: () => boolean;
 	isHomePage: () => boolean;
@@ -133,11 +59,11 @@ export interface Page
 	permalink: () => string;
 	permissions: () => any;
 	previewUrl: () => string;
-	search: (query: string, params: Array | string) => Pages;
+	// search: (query: string, params: Array | string) => Pages;
 	slug: (languageCode: string) => string;
 	status: () => string;
-	template: () => Template;
-	title: () => Field;
+	// template: () => Template;
+	title: Field;
 	uid: () => string;
 	uri: (languageCode: string) => string;
 	url: (options: Array<any>) => string;
@@ -147,7 +73,7 @@ export interface Page
 	childrenAndDrafts: () => Pages;
 	draft: (path: string) => Page;
 	drafts: () => Pages;
-	find: (arguments: Array | string) => Page | Pages | null;
+	// find: (arguments: Array | string) => Page | Pages | null;
 	findPageOrDraft: (path: string) => Page;
 	grandChildren: () => Pages;
 	hasChildren: () => boolean;
@@ -204,12 +130,12 @@ interface Blocks {
 	limit: (limit: number) => Array<any>;
 	nth: (n: number) => Array<any>;
 	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
+	// pluck: (field: string, split: string, unique: boolean) => Array;
 	shuffle: () => Array<any>;
 	slice: (offset: number, limit: number) => Array<any>;
 	sortBy: (args: Array<any>) => Array<any>;
 	without: (keys: Array<any>) => Array<any>;
-	keys: () => Array;
+	// keys: () => Array;
 	prev: () => any;
 	next: () => any;
 	count: () => number;
@@ -239,7 +165,7 @@ interface Collection<TObject> {
 	limit: (limit: number) => Array<any>;
 	nth: (n: number) => Array<any>;
 	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
+	// pluck: (field: string, split: string, unique: boolean) => Array;
 	shuffle: () => Array<any>;
 	slice: (offset: number, limit: number) => Array<any>;
 	sortBy: (args: Array<any>) => Array<any>;
@@ -251,171 +177,71 @@ interface Collection<TObject> {
 }
 
 interface Files extends Collection<File> {}
-
-interface Layouts {
-	findBy: (attribute: string, value: Array<any>) => Array<any>;
-	has: (key: Array<any>) => boolean;
-	not: (keys: Array<any>) => Array<any>;
-	pagination: () => Array<any>;
-	chunk: (size: number) => Array<any>;
-	filterBy: (args: Array<any>) => Array<any>;
-	find: (keys: Array<any>) => Array<any>;
-	findByKey: (key: string) => Array<any>;
-	first: () => Array<any>;
-	flip: () => Array<any>;
-	groupBy: (args: Array<any>) => Array<any>;
-	isEmpty: () => boolean;
-	isEven: () => boolean;
-	isNotEmpty: () => boolean;
-	isOdd: () => boolean;
-	last: () => Array<any>;
-	limit: (limit: number) => Array<any>;
-	nth: (n: number) => Array<any>;
-	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
-	shuffle: () => Array<any>;
-	slice: (offset: number, limit: number) => Array<any>;
-	sortBy: (args: Array<any>) => Array<any>;
-	without: (keys: Array<any>) => Array<any>;
-	keys: () => Array;
-	prev: () => any;
-	next: () => any;
-	count: () => number;
-}
-
-interface Pages {
+interface Pages extends Collection<Page> {
 	audio: () => Files;
 	children: () => Pages;
 	code: () => Files;
 	documents: () => Files;
 	drafts: () => Pages;
 	files: () => Files;
-	findByKey: (key: string) => Page;
 	images: () => Files;
 	index: (drafts: boolean) => Array<any>;
 	listed: () => Pages;
-	unlisted: () => static;
 	notTemplate: (templates: Array<any>) => Array<any>;
-	nums: () => Array;
-	published: () => static;
 	template: (templates: Array<any>) => Array<any>;
 	videos: () => Files;
 	findBy: (attribute: string, value: Array<any>) => Array<any>;
-	has: (key: Array<any>) => boolean;
-	not: (keys: Array<any>) => Array<any>;
 	pagination: () => Array<any>;
-	search: (query: string, params: Array | string) => static;
-	chunk: (size: number) => Array<any>;
-	filterBy: (args: Array<any>) => Array<any>;
-	find: (keys: Array<any>) => Array<any>;
-	first: () => Array<any>;
-	flip: () => Array<any>;
-	groupBy: (args: Array<any>) => Array<any>;
-	isEmpty: () => boolean;
-	isEven: () => boolean;
-	isNotEmpty: () => boolean;
-	isOdd: () => boolean;
-	last: () => Array<any>;
-	limit: (limit: number) => Array<any>;
-	nth: (n: number) => Array<any>;
-	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
-	shuffle: () => Array<any>;
-	slice: (offset: number, limit: number) => Array<any>;
-	sortBy: (args: Array<any>) => Array<any>;
-	without: (keys: Array<any>) => Array<any>;
-	keys: () => Array;
-	prev: () => any;
-	next: () => any;
-	count: () => number;
 }
 
-interface User {
-	apiUrl: (relative: boolean) => string;
-	avatar: () => File;
-	blueprint: () => UserBlueprint;
-	email: () => string;
-	exists: () => boolean;
-	id: () => string;
-	isAdmin: () => boolean;
-	language: () => string;
-	mediaUrl: () => string;
-	modified: (format: string, handler: string, languageCode: string) => string | number | false;
-	name: () => Field;
-	panel: () => User;
-	permissions: () => UserPermissions;
-	role: () => Role;
-	username: () => string;
-	content: (languageCode: string) => Content;
-	audio: () => Files;
-	code: () => Files;
-	documents: () => Files;
-	// file: (filename: string, in: string) => File,
-	files: () => Files;
-	hasAudio: () => boolean;
-	hasCode: () => boolean;
-	hasDocuments: () => boolean;
-	hasFiles: () => boolean;
-	hasImages: () => boolean;
-	hasVideos: () => boolean;
-	image: (filename: string) => File;
-	images: () => Files;
-	videos: () => Files;
-	indexOf: (collection: Array<any>) => number | false;
-	next: (collection: Array<any>) => Array<any>;
-	nextAll: (collection: Array<any>) => Array<any>;
-	prev: (collection: Array<any>) => Array<any>;
-	prevAll: (collection: Array<any>) => Array<any>;
-	siblings: (self: boolean) => Array<any>;
-	hasNext: (collection: Array<any>) => boolean;
-	hasPrev: (collection: Array<any>) => boolean;
-	isFirst: (collection: Array<any>) => boolean;
-	isLast: (collection: Array<any>) => boolean;
-	isNth: (n: number, collection: Array<any>) => boolean;
-}
+interface Layouts extends Collection<Layout> {}
 
-export interface File {
-	// apiUrl: (relative: boolean) => string,
-	// blueprint: () => FileBlueprint,
-	// filename: () => string,
-	// files: () => Files,
-	// html: (attr: Array) => string,
-	// id: () => string,
-	// mediaUrl: () => string,
-	// modified: (format: IntlDateFormatter|string|null, handler: string, languageCode: string) => string|number|false,
-	// panel: () => File,
-	// parent: () => Page|Site|User,
-	// parentId: () => string,
-	// permalink: () => string,
-	// permissions: () => FilePermissions,
-	// site: () => Site,
-	// template: () => string,
-	// templateSiblings: (self: boolean) => Files,
-	// url: () => string,
-	// previewUrl: () => string,
-	// content: (languageCode: string) => Content,
-	// blur: (pixels: number|boolean) => FileVersion|File|Asset,
-	// bw: () => FileVersion|File|Asset,
-	// crop: (width: number, height: number, options: Array<any>) => FileVersion|File|Asset,
-	// grayscale: () => FileVersion|File|Asset,
-	// greyscale: () => FileVersion|File|Asset,
-	// resize: (width: number, height: number, quality: number) => FileVersion|File|Asset,
-	// srcset: (sizes: Array<string>|string|null) => string,
-	// thumb: (options: Array<any>|string|null) => FileVersion|File|Asset,
-	// indexOf: (collection: Array<any>) => number|false,
-	// next: (collection: Array<any>) => Array<any>,
-	// nextAll: (collection: Array<any>) => Array<any>,
-	// prev: (collection: Array<any>) => Array<any>,
-	// prevAll: (collection: Array<any>) => Array<any>,
-	// siblings: (self: boolean) => Array<any>,
-	// hasNext: (collection: Array<any>) => boolean,
-	// hasPrev: (collection: Array<any>) => boolean,
-	// isFirst: (collection: Array<any>) => boolean,
-	// isLast: (collection: Array<any>) => boolean,
-	// isNth: (n: number, collection: Array<any>) => boolean,
-	// exists: () => boolean,
-	// type: () => string,
-}
+// export interface File {
+// 	apiUrl: (relative: boolean) => string;
+// 	blueprint: () => FileBlueprint;
+// 	filename: () => string;
+// 	files: () => Files;
+// 	html: (attr: Array) => string;
+// 	id: () => string;
+// 	mediaUrl: () => string;
+// 	modified: (
+// 		format: IntlDateFormatter | string | null,
+// 		handler: string,
+// 		languageCode: string
+// 	) => string | number | false;
+// 	panel: () => File;
+// 	parent: () => Page | Site | User;
+// 	parentId: () => string;
+// 	permalink: () => string;
+// 	permissions: () => FilePermissions;
+// 	site: () => Site;
+// 	template: () => string;
+// 	templateSiblings: (self: boolean) => Files;
+// 	url: () => string;
+// 	previewUrl: () => string;
+// 	content: (languageCode: string) => Content;
+// 	blur: (pixels: number | boolean) => FileVersion | File | Asset;
+// 	bw: () => FileVersion | File | Asset;
+// 	crop: (width: number, height: number, options: Array<any>) => FileVersion | File | Asset;
+// 	grayscale: () => FileVersion | File | Asset;
+// 	greyscale: () => FileVersion | File | Asset;
+// 	resize: (width: number, height: number, quality: number) => FileVersion | File | Asset;
+// 	srcset: (sizes: Array<string> | string | null) => string;
+// 	thumb: (options: Array<any> | string | null) => FileVersion | File | Asset;
+// 	indexOf: (collection: Array<any>) => number | false;
+// 	next: (collection: Array<any>) => Array<any>;
+// 	nextAll: (collection: Array<any>) => Array<any>;
+// 	prev: (collection: Array<any>) => Array<any>;
+// 	prevAll: (collection: Array<any>) => Array<any>;
+// 	siblings: (self: boolean) => Array<any>;
+// 	hasNext: (collection: Array<any>) => boolean;
+// 	hasPrev: (collection: Array<any>) => boolean;
+// 	isFirst: (collection: Array<any>) => boolean;
+// 	isLast: (collection: Array<any>) => boolean;
+// 	isNth: (n: number, collection: Array<any>) => boolean;
+// 	exists: () => boolean;
+// 	type: () => string;
+// }
 
 interface Structure {
 	findBy: (attribute: string, value: Array<any>) => Array<any>;
@@ -437,7 +263,7 @@ interface Structure {
 	limit: (limit: number) => Array<any>;
 	nth: (n: number) => Array<any>;
 	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
+	// pluck: (field: string, split: string, unique: boolean) => Array;
 	shuffle: () => Array<any>;
 	slice: (offset: number, limit: number) => Array<any>;
 	sortBy: (args: Array<any>) => Array<any>;
@@ -448,37 +274,37 @@ interface Structure {
 	count: () => number;
 }
 
-interface Users {
-	findByKey: (key: string) => User;
-	role: (role: string) => static;
-	findBy: (attribute: string, value: Array<any>) => Array<any>;
-	has: (key: Array<any>) => boolean;
-	not: (keys: Array<any>) => Array<any>;
-	pagination: () => Array<any>;
-	chunk: (size: number) => Array<any>;
-	filterBy: (args: Array<any>) => Array<any>;
-	find: (keys: Array<any>) => Array<any>;
-	first: () => Array<any>;
-	flip: () => Array<any>;
-	groupBy: (args: Array<any>) => Array<any>;
-	isEmpty: () => boolean;
-	isEven: () => boolean;
-	isNotEmpty: () => boolean;
-	isOdd: () => boolean;
-	last: () => Array<any>;
-	limit: (limit: number) => Array<any>;
-	nth: (n: number) => Array<any>;
-	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
-	shuffle: () => Array<any>;
-	slice: (offset: number, limit: number) => Array<any>;
-	sortBy: (args: Array<any>) => Array<any>;
-	without: (keys: Array<any>) => Array<any>;
-	keys: () => Array;
-	prev: () => any;
-	next: () => any;
-	count: () => number;
-}
+// interface Users {
+// 	findByKey: (key: string) => User;
+// 	role: (role: string) => static;
+// 	findBy: (attribute: string, value: Array<any>) => Array<any>;
+// 	has: (key: Array<any>) => boolean;
+// 	not: (keys: Array<any>) => Array<any>;
+// 	pagination: () => Array<any>;
+// 	chunk: (size: number) => Array<any>;
+// 	filterBy: (args: Array<any>) => Array<any>;
+// 	find: (keys: Array<any>) => Array<any>;
+// 	first: () => Array<any>;
+// 	flip: () => Array<any>;
+// 	groupBy: (args: Array<any>) => Array<any>;
+// 	isEmpty: () => boolean;
+// 	isEven: () => boolean;
+// 	isNotEmpty: () => boolean;
+// 	isOdd: () => boolean;
+// 	last: () => Array<any>;
+// 	limit: (limit: number) => Array<any>;
+// 	nth: (n: number) => Array<any>;
+// 	offset: (offset: number) => Array<any>;
+// 	pluck: (field: string, split: string, unique: boolean) => Array;
+// 	shuffle: () => Array<any>;
+// 	slice: (offset: number, limit: number) => Array<any>;
+// 	sortBy: (args: Array<any>) => Array<any>;
+// 	without: (keys: Array<any>) => Array<any>;
+// 	keys: () => Array;
+// 	prev: () => any;
+// 	next: () => any;
+// 	count: () => number;
+// }
 
 interface FileVersion {
 	id: () => string;
@@ -490,7 +316,7 @@ interface FileVersion {
 interface StructureObject {
 	content: () => Content;
 	id: () => string;
-	parent: () => ModelWithContent;
+	// parent: () => ModelWithContent;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
@@ -505,23 +331,23 @@ interface StructureObject {
 }
 
 export interface App {
-	collection: (name: string, options: Array) => Array<any>;
-	defaultLanguage: () => Language;
-	detectedLanguage: () => Language;
-	file: (path: string, parent: any, drafts: boolean) => File;
-	language: (code: string) => Language;
-	languageCode: (languageCode: string) => string;
-	languages: (clone: boolean) => Languages;
-	multilang: () => boolean;
-	page: (id: string, parent: Page | Site | null, drafts: boolean) => Page;
-	roles: () => Roles;
-	site: () => Site;
-	url: (type: string, object: boolean) => Uri | string | null;
-	version: () => string;
-	translation: (locale: string) => Translation;
-	translations: () => Translations;
-	user: (id: string, allowImpersonation: boolean) => User;
-	users: () => Users;
+	// collection: (name: string, options: Array) => Array<any>;
+	// defaultLanguage: () => Language;
+	// detectedLanguage: () => Language;
+	// file: (path: string, parent: any, drafts: boolean) => File;
+	// language: (code: string) => Language;
+	// languageCode: (languageCode: string) => string;
+	// languages: (clone: boolean) => Languages;
+	// multilang: () => boolean;
+	// page: (id: string, parent: Page | Site | null, drafts: boolean) => Page;
+	// roles: () => Roles;
+	// site: () => Site;
+	// url: (type: string, object: boolean) => Uri | string | null;
+	// version: () => string;
+	// translation: (locale: string) => Translation;
+	// translations: () => Translations;
+	// user: (id: string, allowImpersonation: boolean) => User;
+	// users: () => Users;
 }
 
 interface LayoutColumn {
@@ -545,27 +371,27 @@ interface LayoutColumn {
 }
 
 interface Blueprint {
-	field: (name: string) => Array;
-	fields: () => Array;
-	isDefault: () => boolean;
-	name: () => string;
-	section: (name: string) => Section;
-	sections: () => Array;
-	tab: (name: string) => Array;
-	tabs: () => Array;
-	title: () => string;
+	// field: (name: string) => Array;
+	// fields: () => Array;
+	// isDefault: () => boolean;
+	// name: () => string;
+	// section: (name: string) => Section;
+	// sections: () => Array;
+	// tab: (name: string) => Array;
+	// tabs: () => Array;
+	// title: () => string;
 }
 
 interface Translation {
-	author: () => string;
-	code: () => string;
-	data: () => Array;
-	dataWithFallback: () => Array;
-	direction: () => string;
-	// get: (key: string, default: string) => string,
-	id: () => string;
-	locale: () => string;
-	name: () => string;
+	// author: () => string;
+	// code: () => string;
+	// data: () => Array;
+	// dataWithFallback: () => Array;
+	// direction: () => string;
+	// // get: (key: string, default: string) => string,
+	// id: () => string;
+	// locale: () => string;
+	// name: () => string;
 }
 
 interface Block {
@@ -577,7 +403,7 @@ interface Block {
 	toField: () => Field;
 	toHtml: () => string;
 	id: () => string;
-	parent: () => ModelWithContent;
+	// parent: () => ModelWithContent;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
@@ -597,7 +423,7 @@ interface Layout {
 	isEmpty: () => boolean;
 	isNotEmpty: () => boolean;
 	id: () => string;
-	parent: () => ModelWithContent;
+	// parent: () => ModelWithContent;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
@@ -644,6 +470,7 @@ interface Files {
 }
 
 export interface Site {
+	__extra: Field;
 	apiUrl: (relative: boolean) => string;
 	blueprint: () => Blueprint;
 	breadcrumb: () => Pages;
@@ -657,18 +484,18 @@ export interface Site {
 	page: (path: string) => Page;
 	pages: () => Pages;
 	panel: () => Site;
-	permissions: () => SitePermissions;
+	// permissions: () => SitePermissions;
 	previewUrl: () => string;
-	search: (query: string, params: Array | string) => Pages;
+	// search: (query: string, params: Array | string) => Pages;
 	url: (language: string) => string;
-	blueprints: (inSection: string) => Array;
+	// blueprints: (inSection: string) => Array;
 	content: (languageCode: string) => Content;
 	id: () => string;
 	children: () => Pages;
 	childrenAndDrafts: () => Pages;
 	draft: (path: string) => Page;
 	drafts: () => Pages;
-	find: (arguments: Array<string> | string) => Page | Pages | null;
+	// find: (arguments: Array<string> | string) => Page | Pages | null;
 	findPageOrDraft: (path: string) => Page;
 	grandChildren: () => Pages;
 	hasChildren: () => boolean;
@@ -712,13 +539,126 @@ interface LayoutColumns {
 	limit: (limit: number) => Array<any>;
 	nth: (n: number) => Array<any>;
 	offset: (offset: number) => Array<any>;
-	pluck: (field: string, split: string, unique: boolean) => Array;
+	// pluck: (field: string, split: string, unique: boolean) => Array;
 	shuffle: () => Array<any>;
 	slice: (offset: number, limit: number) => Array<any>;
 	sortBy: (args: Array<any>) => Array<any>;
 	without: (keys: Array<any>) => Array<any>;
-	keys: () => Array;
+	// keys: () => Array;
 	prev: () => any;
 	next: () => any;
 	count: () => number;
 }
+// Define the KirbyContext
+type KirbyContext = {
+	page: Page;
+	site: Site;
+	file: File;
+	kirby: App;
+};
+const query = {
+	query: 'site()',
+	select: {
+		title: true,
+		logo: {
+			query: 'site.logo.toFile',
+			select: {
+				srcset: true,
+				width: true,
+				height: true,
+				placeholder: 'file.resize(5).url'
+			}
+		},
+		pages: {
+			query: 'site.children',
+			select: {
+				title: true,
+				tags: "page.tags.split(',')"
+			}
+		}
+	}
+} as const;
+type Content = KQLQueryData<typeof query>;
+const queryWithFunctions = {
+	query: page(),
+	select: {
+		title: true,
+		logo: {
+			query: site().logo.toFile(),
+			select: {
+				srcset: true,
+				width: true,
+				height: true,
+				placeholder: file().resize(5).url()
+			}
+		},
+		pages: {
+			query: site().children(),
+			select: {
+				title: true,
+				tags: page().tags.split(',')
+			}
+		}
+	}
+};
+
+// create a type that is an if statement
+
+type GetFieldType<T, K extends keyof any> = K extends keyof T ? T[K] : GetPropTypeFromQuery<T>;
+
+type GetPropTypeFromQuery<T> = T extends { query: infer Q } ? Q : {};
+
+type IsQuery<T> = T extends { query: infer Q } ? true : false;
+
+type GetSelectKeys<T> = T extends { select: infer S } ? S : never;
+
+/**
+ * Prettify the type mainly in a way that ensures that the leftovers are removed.
+ *
+ * @example
+ * //from this:
+ * select: {
+ *   srcset: true,
+ *   width: true,
+ *   height: true,
+ *   placeholder: file().resize(5).url()
+ * }
+ *
+ * //We get this:
+ * propAboveSelect: {
+ *   srcset: true,
+ *   width: true,
+ *   height: true,
+ *   placeholder: string
+ * }
+ */
+type ExtractPropsFromSelect<T> = T extends { select: infer S } ? { [K in keyof S]: S[K] } : T;
+
+type MapToInferredQueryType<T extends KQLQuery> = ExtractPropsFromSelect<{
+	[K in keyof GetSelectKeys<T>]: GetSelectKeys<T>[K] extends { query: infer Q }
+		? MapToInferredQueryType<GetSelectKeys<T>[K]>
+		: GetFieldType<GetSelectKeys<T>, K> extends boolean
+			? keyof GetSelectKeys<T> extends keyof { query: infer Q }
+				? Q[keyof Q]
+				: string
+			: GetFieldType<GetSelectKeys<T>, K>;
+}>;
+//   ^?
+
+type KQLQuery = {
+	query: any;
+	select?: {
+		[key: string]: any;
+	};
+	models?: any;
+	pagination?: {
+		limit?: number;
+		page?: number;
+	};
+};
+
+type Content2 = Test<typeof queryWithFunctions>;
+//    ^?
+let test = {} as Content2;
+let test2 = {} as MapToInferredQueryType<typeof queryWithFunctions>;
+// test.pages;
