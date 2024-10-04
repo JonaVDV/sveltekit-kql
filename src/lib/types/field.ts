@@ -193,7 +193,13 @@ export interface Field {
 /**@todo make a proper interface for the following interfaces */
 interface Blocks {}
 interface Layout {}
-interface File {}
+interface File {
+	__extra: Field;
+	__default: string;
+	width: number;
+	height: number;
+	srcset: string;
+}
 interface Content {}
 interface Page {}
 interface Structure {}
