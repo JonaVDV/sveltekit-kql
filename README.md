@@ -104,6 +104,7 @@ export const load = createMultiQueryLoad({
 ```
 
 ## transforming data
+
 you can transform the data that is returned from the query by passing a transform function to the load function like this:
 
 ```typescript
@@ -111,18 +112,18 @@ you can transform the data that is returned from the query by passing a transfor
 import { kqlLoad } from 'sveltekit-kql';
 
 const HomeQuery = {
-    query: 'page("home")',
-    select: {
-        id: true,
-        title: true,
-        intendedTemplate: true,
-        // description: true,
-        headline: true,
-        subheadline: true
-    }
+	query: 'page("home")',
+	select: {
+		id: true,
+		title: true,
+		intendedTemplate: true,
+		// description: true,
+		headline: true,
+		subheadline: true
+	}
 };
 
-export const load = kqlLoad()
+export const load = kqlLoad();
 ```
 
 ## License
