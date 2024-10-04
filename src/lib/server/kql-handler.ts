@@ -88,7 +88,7 @@ export async function kqlHandler<T extends KirbyQueryResponse>(
 			credentials,
 			body: JSON.stringify({
 				query: query.query,
-				select: query.select,
+				select: query.select
 			}),
 			signal: controller.signal
 		});

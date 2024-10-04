@@ -2,6 +2,7 @@ import type { KirbyQueryRequest } from 'kirby-types';
 import type { KQLLoadOptions } from './kql-load';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { kqlHandler } from './kql-handler';
+import { transformQuery } from './utils';
 
 interface MultiQueryConfig {
 	[key: string]: {
@@ -30,14 +31,4 @@ export function createMultiQueryLoad(config: MultiQueryConfig) {
 		}
 		return Object.fromEntries(results);
 	};
-}
-
-function transformQuery(query: any) {
-	const transformedQuery = {
-		query: query.query.toString(),
-		select: query.select
-	};
-	console.log(transformedQuery);
-
-	return transformedQuery;
 }

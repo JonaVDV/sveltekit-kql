@@ -1,6 +1,7 @@
 import type { ServerLoad, ServerLoadEvent } from '@sveltejs/kit';
 import { kqlHandler, type KQLClientOptions } from './kql-handler';
 import type { KirbyQueryRequest } from 'kirby-types';
+import { transformQuery } from './utils';
 
 export interface KQLLoadOptions extends KQLClientOptions {
 	/**
@@ -35,14 +36,4 @@ export function kqlLoad(query: KirbyQueryRequest, options: KQLLoadOptions = {}) 
 			status: data.status
 		};
 	};
-}
-
-function transformQuery(query: any) {
-	const transformedQuery = {
-		query: query.query.toString(),
-		select: query.select
-	};
-	console.log(transformedQuery);
-
-	return transformedQuery;
 }
