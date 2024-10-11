@@ -1,3 +1,7 @@
+import type { Content } from './content';
+import type { File } from './file';
+import type { Page, Pages } from './page';
+
 type EscapeContext = 'html' | 'attr' | 'js' | 'css' | 'url' | 'xml';
 type Validators =
 	| 'accepted'
@@ -156,7 +160,7 @@ export interface Field {
 	/**Returns a page object from a page id in the field */
 	toPage: () => Page | null;
 	/**Returns a pages collection from a yaml list of page ids in the field */
-	toPages: () => Page[];
+	toPages: () => Pages;
 	/** Turns the field value into an QR code object*/
 	toQrCode: () => QrCode;
 	/**
@@ -193,15 +197,6 @@ export interface Field {
 /**@todo make a proper interface for the following interfaces */
 interface Blocks {}
 interface Layout {}
-interface File {
-	__extra: Field;
-	__default: string;
-	width: number;
-	height: number;
-	srcset: string;
-}
-interface Content {}
-interface Page {}
 interface Structure {}
 interface User {}
 // not sure if we should include this
