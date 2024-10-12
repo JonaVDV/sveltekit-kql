@@ -1,4 +1,8 @@
-interface allowedMethodsForChildren {
+import type { Content } from './content';
+import type { File, Files } from './file';
+import type { Site } from './site';
+
+export interface allowedMethodsForChildren {
 	children: any;
 	childrenAndDrafts: any;
 	draft: any;
@@ -14,30 +18,34 @@ interface allowedMethodsForChildren {
 	search: any;
 }
 
-interface allowedMethodsForFiles {
-	audio: any;
-	code: any;
-	documents: any;
-	file: any;
-	files: any;
-	hasAudio: any;
-	hasCode: any;
-	hasDocuments: any;
-	hasFiles: any;
-	hasImages: any;
-	hasVideos: any;
-	image: any;
-	images: any;
-	videos: any;
+export interface allowedMethodsForFiles {
+	audio: () => Files;
+	code: () => Files;
+	documents: () => Files;
+	file: (filename?: string) => File;
+	/**Returns the Files collection */
+	files: () => Files;
+	hasAudio: () => boolean;
+	/**Checks if the Files collection has any code files*/
+	hasCode: () => boolean;
+	/**Checks if the Files collection has any document files*/
+	hasDocuments: () => boolean;
+	/**Checks if the Files collection has any files*/
+	hasFiles: () => boolean;
+	hasImages: () => boolean;
+	hasVideos: () => boolean;
+	image: (filename?: string) => File | null;
+	images: () => Files;
+	videos: () => Files;
 }
 
-interface allowedMethodsForModels {
-	apiUrl: any;
-	blueprint: any;
-	content: any;
+export interface allowedMethodsForModels {
+	apiUrl: () => string;
+	blueprint: () => any;
+	content: () => Content;
 	dragText: any;
 	exists: any;
-	id: any;
+	id: () => string;
 	mediaUrl: any;
 	modified: any;
 	permissions: any;
@@ -47,7 +55,7 @@ interface allowedMethodsForModels {
 	url: any;
 }
 
-interface AllowedMethodsForSiblings {
+export interface AllowedMethodsForSiblings {
 	indexOf: any;
 	next: any;
 	nextAll: any;
@@ -61,9 +69,9 @@ interface AllowedMethodsForSiblings {
 	isNth: any;
 }
 
-interface AllowedMethodsForParents {
+export interface AllowedMethodsForParents {
 	parent: any;
 	parentId: any;
 	parentModel: any;
-	site: any;
+	site: () => Site;
 }

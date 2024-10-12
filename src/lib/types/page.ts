@@ -1,3 +1,10 @@
+import type {
+	allowedMethodsForChildren,
+	allowedMethodsForFiles,
+	allowedMethodsForModels,
+	AllowedMethodsForParents,
+	AllowedMethodsForSiblings
+} from './allowedMethods';
 import type { Collection } from './collection';
 import type { Content } from './content';
 import type { Field } from './field';
@@ -66,15 +73,7 @@ export interface Page
 	audio: () => Files;
 	code: () => Files;
 	documents: () => Files;
-	// file: (filename: string, in: string) => File,
-	files: () => Files;
-	hasAudio: () => boolean;
-	hasCode: () => boolean;
-	hasDocuments: () => boolean;
-	hasFiles: () => boolean;
-	hasImages: () => boolean;
-	hasVideos: () => boolean;
-	image: (filename: string) => File;
+	// image: (filename: string) => File;
 	images: () => Files;
 	videos: () => Files;
 	indexOf: (collection: Array<any>) => number | false;

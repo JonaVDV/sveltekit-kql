@@ -1,3 +1,5 @@
+import type { AllowedMethodsForSiblings } from './allowedMethods';
+import type { Collection } from './collection';
 import type { Content } from './content';
 
 export interface Layout extends AllowedMethodsForSiblings {
@@ -11,6 +13,15 @@ export interface Layout extends AllowedMethodsForSiblings {
 	};
 }
 
-interface LayoutColumn {}
+export interface Layouts extends Collection<Layout> {}
 
-interface LayoutColumns {}
+interface LayoutColumn extends AllowedMethodsForSiblings {
+	blocks: () => any;
+	id: () => string;
+	isEmpty: () => boolean;
+	isNotEmpty: () => boolean;
+	span: () => number;
+	width: () => string;
+}
+
+interface LayoutColumns extends Collection<LayoutColumn> {}

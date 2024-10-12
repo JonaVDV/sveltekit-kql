@@ -1,5 +1,6 @@
 import type { Content } from './content';
 import type { File } from './file';
+import type { Layout, Layouts } from './layout';
 import type { Page, Pages } from './page';
 
 type EscapeContext = 'html' | 'attr' | 'js' | 'css' | 'url' | 'xml';
@@ -149,7 +150,7 @@ export interface Field {
 	/**Converts the field value into a proper integer */
 	toInt: ($default: 0 | number) => number;
 	/**Parse layouts and turn them into Layout objects */
-	toLayouts: () => Layout[];
+	toLayouts: () => Layouts;
 	/**Wraps a link tag around the field value. The field value is used as the link text
 	 * @param attr1 - Can be an optional Url. If no Url is set, the Url of the Page, File or Site will be used. Can also be an array of link attributes
 	 * @param attr2 - If `$attr1 `is used to set the Url, you can use `$attr2` to pass an array of additional attributes.
@@ -196,7 +197,7 @@ export interface Field {
 
 /**@todo make a proper interface for the following interfaces */
 interface Blocks {}
-interface Layout {}
+// interface Layout {}
 interface Structure {}
 interface User {}
 // not sure if we should include this

@@ -1,10 +1,20 @@
 import type { Field } from './field';
+import type {
+	allowedMethodsForChildren,
+	allowedMethodsForFiles,
+	allowedMethodsForModels
+} from './allowedMethods';
 import type { Page, Pages } from './page';
 
-export interface Site {
+export interface Site
+	extends allowedMethodsForChildren,
+		allowedMethodsForFiles,
+		allowedMethodsForModels {
 	__extra: Field;
-	apiUrl: (relative: boolean) => string;
-	blueprint: () => Blueprint;
+	__default: {
+		title: string;
+	};
+	// blueprint: () => Blueprint;
 	breadcrumb: () => Pages;
 	errorPage: () => Page;
 	errorPageId: () => string;
