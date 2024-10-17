@@ -1,6 +1,9 @@
 import type { Field } from './field';
 
-export type Content = {
+export interface Content {
+	__default: {
+		[key: string]: string;
+	};
 	data: Record<string, Field>;
 	fields: () => {
 		[key: string]: Field;
@@ -11,4 +14,4 @@ export type Content = {
 	keys: () => string[];
 	/**Returns a clone of the content object without the fields, specified by the passed key(s) */
 	not: (...keys: string[]) => Content;
-} & { [key: string]: Field };
+}
