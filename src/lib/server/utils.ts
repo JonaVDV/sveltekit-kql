@@ -16,11 +16,6 @@ type ProxyHandler<T> = {
 	apply(target: T, thisArg: any, argArray?: any): any;
 };
 
-globalThis.page = kirbyContext.page;
-globalThis.site = kirbyContext.site;
-globalThis.kirby = kirbyContext.kirby;
-globalThis.file = kirbyContext.file;
-
 function proxyHandler<T>(path: string): ProxyHandler<T> {
 	return {
 		get(target, prop) {
@@ -40,21 +35,27 @@ function proxyHandler<T>(path: string): ProxyHandler<T> {
 function createKQLProxy<T>(path = ''): T {
 	return new Proxy(() => {}, proxyHandler<T>(path)) as unknown as T;
 }
+globalThis.page = kirbyContext.page;
+globalThis.site = kirbyContext.site;
+globalThis.kirby = kirbyContext.kirby;
+globalThis.file = kirbyContext.file;
 
+/**
+ * Transform the query by converting 'query' keys to their string paths, and recursively processing nested objects and functions
+ * @param query - The query object to transform
+ * @returns The transformed query object
+ */
 export function transformQuery<T extends object>(query: T): Record<string, any> {
-	// get every key with the name 'query' and call the toString method to get the path
-	const transformedQuery = Object.fromEntries(
-		Object.entries(query).map(([key, value]) => {
-			if (key === 'query') {
-				return [key, value.toString()];
-			}
-			if (typeof value === 'object') {
-				return [key, transformQuery(value)];
-			}
-			return [key, value];
-		})
+	return Object.fromEntries(
+		Object.entries(query).map(([key, value]) => [
+			key,
+			key === 'query' || typeof value === 'function'
+				? value.toString()
+				: typeof value === 'object'
+					? transformQuery(value)
+					: value
+		])
 	);
-	return transformedQuery;
 }
 
 declare global {
