@@ -1,7 +1,10 @@
+import type { Blocks } from './block';
+import type { Collection } from './collection';
 import type { Content } from './content';
 import type { File } from './file';
 import type { Layout, Layouts } from './layout';
 import type { Page, Pages } from './page';
+import type { StructureObject } from './structure';
 
 type EscapeContext = 'html' | 'attr' | 'js' | 'css' | 'url' | 'xml';
 type Validators =
@@ -169,7 +172,7 @@ export interface Field {
 	 */
 	toString: () => string;
 	/**Converts a yaml field to a Structure object*/
-	toStructure: () => Structure;
+	toStructure: () => Collection<StructureObject>;
 	/**Converts the field value to a Unix timestamp*/
 	toTimestamp: () => number | false;
 	/**Turns the field value into an absolute Url*/
@@ -196,9 +199,6 @@ export interface Field {
 }
 
 /**@todo make a proper interface for the following interfaces */
-interface Blocks {}
-// interface Layout {}
-interface Structure {}
 interface User {}
 // not sure if we should include this
 interface QrCode {}
