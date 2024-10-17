@@ -18,6 +18,25 @@ export interface Page
 		AllowedMethodsForSiblings,
 		AllowedMethodsForParents {
 	__extra: Field;
+	__default: {
+		children: string[];
+		content: {
+			[key: string]: string;
+		};
+		drafts: string[];
+		files: any[];
+		id: string;
+		intendedTemplate: string;
+		isHomePage: boolean;
+		isErrorPage: boolean;
+		num: number;
+		template: string;
+		title: string;
+		slug: string;
+		status: string;
+		uid: string;
+		url: string;
+	};
 	// apiUrl: (relative: boolean | true) => string;
 	blueprint: () => Blueprint;
 	blueprints: (inSection: string) => Array<Blueprint>;
