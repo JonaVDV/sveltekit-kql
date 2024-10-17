@@ -73,12 +73,12 @@ describe('KQLQueryTypeResolver', () => {
 		};
 
 		type Expected = {
-			test: string;
+			title: string;
 		};
 		type Result = KQLQueryTypeResolver<typeof query>;
 
 		let typeCheck = {} as Result;
-		expectTypeOf(typeCheck).toEqualTypeOf<Expected>();
+		expectTypeOf<Result>().toEqualTypeOf<Expected>();
 	});
 });
 
@@ -144,35 +144,34 @@ describe('GetKeyFromQueryOrExtra', () => {
 	});
 });
 
-
 describe('isBooleanKeyType', () => {
 	it('should return true if the key is a boolean', () => {
 		const query = {
 			query: page(),
 			select: {
-				title: true,
+				title: true
 			}
-		}
+		};
 
 		type Expected = true;
 
-		type Result = IsKeyBooleanType<typeof query.select, 'title'>
+		type Result = IsKeyBooleanType<typeof query.select, 'title'>;
 
-		expectTypeOf<Result>().toEqualTypeOf<Expected>()
-	})
+		expectTypeOf<Result>().toEqualTypeOf<Expected>();
+	});
 
 	it('should return false if the key is not a boolean', () => {
 		const query = {
 			query: page(),
 			select: {
-				title: true,
+				title: true
 			}
-		}
+		};
 
 		type Expected = false;
 
-		type Result = IsKeyBooleanType<typeof query.select, 'test'>
+		type Result = IsKeyBooleanType<typeof query.select, 'test'>;
 
-		expectTypeOf<Result>().toEqualTypeOf<Expected>()
-	})
-})
+		expectTypeOf<Result>().toEqualTypeOf<Expected>();
+	});
+});
