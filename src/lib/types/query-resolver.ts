@@ -1,4 +1,12 @@
 import type { Collection } from './collection';
+
+export type IsCollection<T> = T extends Collection<any> ? true : false;
+export type ToCollection<T> = T extends Collection<infer U> ? U : T;
+/**
+ * WrapIfCollection takes a type and a query and returns the type as an array if the query is a collection
+ */
+export type WrapIfCollection<TObject, Query> =
+	IsCollection<Query> extends true ? TObject[] : TObject;
 /**
  * Get the key from the query or if it is not there, return the type of the __extra property
  */
@@ -29,6 +37,9 @@ export type GetQueryTypeDefaultOrExtra<TQuery> = TQuery extends { __default: inf
  */
 export type ExtractDefault<T> = T extends { __default: infer D } ? D : T;
 
+/**
+ * Checks if a type is a function, if it is, it returns the return type of that function, otherwise it returns the type
+ */
 export type FunctionToReturn<T> = T extends (...args: any) => any ? ReturnType<T> : T;
 
 /**
@@ -43,36 +54,40 @@ type CompareAndGetFromQuery<
 	? IsKeyBooleanType<TSelectObject, Key> extends true
 		? // make sure that if the type of the given key is a function, we return the return type of that function otherwise users need to call functions in their templats that don't return anything
 			FunctionToReturn<ExtractDefault<GetKeyFromQueryOrExtra<ToCollection<Query>, Key>>>
-		: TSelectObject[Key] extends KQLQuery
-			? WrapIfCollection<
+		: IsCollection<TSelectObject[Key]> extends true
+			? KQLQueryTypeResolver<{
+					query: HandleDeepCollections<TSelectObject[Key]>['query'];
+					select: HandleDeepCollections<TSelectObject[Key]>['select'];
+				}>
+			: WrapIfCollection<
 					KQLQueryTypeResolver<{
 						query: ToCollection<TSelectObject[Key]['query']>;
 						select: TSelectObject[Key]['select'];
 					}>,
 					TSelectObject[Key]['query']
 				>
-			: ExtractDefault<TSelectObject[Key]>
-	: GetQueryTypeDefaultOrExtra<Query>;
+	: GetQueryTypeDefaultOrExtra<TSelectObject>;
 
 export type KQLQueryTypeResolver<T extends KQLQuery> = WrapIfCollection<
 	{
-		[K in keyof T['select']]: CompareAndGetFromQuery<T['select'], K, T['query']>;
+		[K in keyof T['select']]: CompareAndGetFromQuery<T['select'], K, ToCollection<T['query']>>;
 	},
 	T['query']
 >;
 
-export type IsCollection<T> = T extends Collection<any> ? true : false;
-export type ToCollection<T> = T extends Collection<infer U> ? U : T;
-/**
- * WrapIfCollection takes a type and a query and returns the type as an array if the query is a collection
- */
-export type WrapIfCollection<TObject, Query> =
-	IsCollection<Query> extends true ? TObject[] : TObject;
-
-/**@todo - make sure this is usable in `createMultiQueryLoad` */
-type MultiQueryTypeResolver<T extends Record<string, KQLQuery> & { options: any }> = {
-	[key in keyof T]: KQLQueryTypeResolver<T[key]>;
-};
+type HandleDeepCollections<T> =
+	T extends Collection<infer U>
+		? {
+				query: Collection<U>;
+				select: {
+					[K in keyof ExtractDefault<U>]: HandleDeepCollections<
+						FunctionToReturn<ExtractDefault<U>[K]> extends Collection<any>
+							? FunctionToReturn<ExtractDefault<U>[K]>
+							: true
+					>;
+				};
+			}
+		: T;
 
 export type KQLQuery = {
 	query: any;
