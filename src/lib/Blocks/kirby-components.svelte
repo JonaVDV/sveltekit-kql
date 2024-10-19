@@ -1,14 +1,10 @@
 <script lang="ts">
 	import type { KirbyBlock } from 'kirby-types';
-	import type { ComponentType } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
 	import { components } from '$lib';
-
-	
 
 	interface Props {
 		blocks: KirbyBlock[];
-		[key: string]: any
+		[key: string]: any;
 	}
 
 	let { blocks, ...rest }: Props = $props();

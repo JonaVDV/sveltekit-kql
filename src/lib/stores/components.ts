@@ -1,5 +1,5 @@
 import type { KirbyDefaultBlocks } from 'kirby-types';
-import type { ComponentType } from 'svelte';
+import type { Component } from 'svelte';
 import { writable } from 'svelte/store';
 
 /**
@@ -13,4 +13,4 @@ import { writable } from 'svelte/store';
  *   image: ImageBlock,
  * }
  */
-export const components = writable<Partial<Record<keyof KirbyDefaultBlocks, ComponentType>>>();
+export const components = writable<Record<keyof KirbyDefaultBlocks, Component<any, any, any>>>();

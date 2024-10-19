@@ -1,28 +1,29 @@
-<script lang='ts'>
-  type ImageResolverCollection = (Record<string, any>) & {
-	  url: string | null | undefined;uuid: string
-}[]
-  interface Props {
-    uuid: string;
-    collection: ImageResolverCollection;
-    children?: import('svelte').Snippet<[any]>;
-  }
+<script lang="ts">
+	type ImageResolverCollection = Record<string, any> &
+		{
+			url: string | null | undefined;
+			uuid: string;
+		}[];
+	interface Props {
+		uuid: string;
+		collection: ImageResolverCollection;
+		children?: import('svelte').Snippet<[any]>;
+	}
 
-  let { uuid, collection, children }: Props = $props();
+	let { uuid, collection, children }: Props = $props();
 
-  if (!uuid) {
-    throw new TypeError('Uuid must be provided')
-  }
+	if (!uuid) {
+		throw new TypeError('Uuid must be provided');
+	}
 
-  if (!Array.isArray(collection)) {
-    throw new TypeError('Collection must be an array')
-  }
+	if (!Array.isArray(collection)) {
+		throw new TypeError('Collection must be an array');
+	}
 
-  const image = collection.find((image) => image.uuid === uuid)
-  if (!image) {
-    throw new Error(`Image with uuid ${uuid} not found`)
-  }
-  
+	const image = collection.find((image) => image.uuid === uuid);
+	if (!image) {
+		throw new Error(`Image with uuid ${uuid} not found`);
+	}
 </script>
 
 <!-- 
@@ -44,7 +45,6 @@
 
  -->
 
-
 {#if image}
-  {@render children?.({ image, })}
+	{@render children?.({ image })}
 {/if}

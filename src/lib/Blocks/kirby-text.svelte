@@ -1,15 +1,11 @@
-<script lang='ts'>
-  import type { KirbyBlock } from "kirby-types";
+<script lang="ts">
+	import type { KirbyBlock } from 'kirby-types';
 
-  
+	interface Props {
+		text: string;
+	}
 
-  interface Props {
-    text: string;
-  }
-
-  let { text }: Props = $props();
-
+	let { text }: Props = $props();
 </script>
 
 {@html text}
-

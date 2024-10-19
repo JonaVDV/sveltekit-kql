@@ -6,7 +6,7 @@ import { kqlLoad } from '$lib/server';
 
 export const load = kqlLoad(
 	{
-		query: site(),
+		query: site()
 	},
 	{
 		transform: (data) => {

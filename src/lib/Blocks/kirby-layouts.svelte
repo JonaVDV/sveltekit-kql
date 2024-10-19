@@ -17,8 +17,6 @@
 		isEmpty: boolean;
 	}
 
-	
-
 	/**
 	 * **Custom layout component**
 	 *
@@ -37,15 +35,10 @@
 		>;
 		undefined?: string;
 		components?: import('svelte').Snippet;
-		[key: string]: any
+		[key: string]: any;
 	}
 
-	let {
-		layouts,
-		customLayout = undefined,
-		components,
-		...rest
-	}: Props = $props();
+	let { layouts, customLayout = undefined, components, ...rest }: Props = $props();
 </script>
 
 <div>
