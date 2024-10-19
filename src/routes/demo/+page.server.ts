@@ -1,6 +1,8 @@
 import { kqlLoad } from '$lib/server';
 import { createMultiQueryLoad } from '$lib/server/multi-query';
+import type { kirbyContext } from '$lib/server/utils';
 import type { KQLQueryData } from '$lib/types/query';
+import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
 import type { KirbyQuerySchema } from 'kirby-types';
 const HomeQuery = {
 	query: page('home'),
@@ -8,22 +10,22 @@ const HomeQuery = {
 		id: true,
 		title: true,
 		intendedTemplate: true,
-		// description: true,
+		description: true,
 		headline: true,
 		subheadline: true
 	}
 };
 
 const photographyQuery = {
-	query: page('photography').children().listed(),
+	query: page('photography').children(),
 	select: {
 		id: true,
 		title: true,
 		cover: {
-			query: 'page.content.cover.toFile',
+			query: page().content().cover.toFile(),
 			select: {
 				resized: {
-					query: 'file.resize(1024, 1024)',
+					query: file().resize(1024, 1024),
 					select: {
 						url: true
 					}
@@ -35,7 +37,7 @@ const photographyQuery = {
 			query: page().images().first(),
 			select: {
 				resized: {
-					query: 'file.resize(1024, 1024)',
+					query: file().resize(1024, 1024),
 					select: {
 						url: true
 					}
@@ -46,11 +48,4 @@ const photographyQuery = {
 	}
 };
 
-export const load = createMultiQueryLoad({
-	photography: {
-		query: photographyQuery
-	},
-	home: {
-		query: HomeQuery
-	}
-});
+export const load = kqlLoad(photographyQuery);

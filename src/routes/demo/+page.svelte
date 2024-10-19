@@ -1,32 +1,12 @@
 <script lang="ts">
 	export let data;
-	console.log(data);
-	
 
-	// Assign the proxy to the globalThis object
-	// globalThis.page = createKQLProxy('page');
-
-	// Example usage
-	// const testQuery = {
-	// 	query: page('home').children().count(),
-	// 	select: {
-	// 		id: true,
-	// 		title: true,
-	// 		intendedTemplate: true,
-	// 		// description: true,
-	// 		headline: true,
-	// 		subheadline: true
-	// 	}
-	// };
-
-	// This will stringify the query call
-	// console.log(testQuery.query.toString());
-	// Output: 'home().children()'
+	$: cmsData = data.kqlData;
 </script>
 
-<!-- <div>
+<div>
 	<ul class="home-grid">
-		{#each photographyData as album, index}
+		{#each cmsData as album, index}
 			<li>
 				<a href="/{album.id}">
 					<figure>
@@ -45,9 +25,9 @@
 			</li>
 		{/each}
 	</ul>
-</div> -->
+</div>
 
-<!-- <style>
+<style>
 	.home-grid {
 		display: grid;
 		list-style: none;
@@ -120,4 +100,4 @@
 			padding-bottom: 52.65%;
 		}
 	}
-</style> -->
+</style>

@@ -3,22 +3,27 @@ import type { KirbyQuerySchema } from 'kirby-types';
 import type { PageServerLoad } from './$types';
 
 const AboutQuery = {
-	query: `page("about")`,
+	query: page('about'),
 	select: {
 		id: true,
 		title: true,
 		intendedTemplate: true,
-		// description: true,
-		layouts: 'page.layout.toLayouts',
-		address: 'page.address.kirbytext',
+		description: true,
+		layouts: page().layout.toLayouts(),
+		address: page().address.kirbytext(),
 		email: true,
 		phone: true,
-		social: 'page.social.toStructure',
+		social: page().social.toStructure(),
 		images: {
-			query: 'page.images',
-			select: ['id', 'uuid', 'url', 'alt']
+			query: page().images(),
+			select: {
+				id: true,
+				uuid: true,
+				url: true,
+				alt: true
+			}
 		}
 	}
-} as KirbyQuerySchema;
+};
 
 export const load = kqlLoad(AboutQuery) satisfies PageServerLoad;
