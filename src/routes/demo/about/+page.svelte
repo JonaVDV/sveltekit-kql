@@ -1,14 +1,22 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	// import type { KQLData } from './$kql';
 	import { KirbyLayouts } from '$lib';
 	import KirbyComponents from '$lib/Blocks/kirby-components.svelte';
-	export let data;
+	interface Props {
+		data: any;
+	}
 
-	$: layouts = data.kqlData.layouts;
+	let { data }: Props = $props();
 
-	$: aboutPage = data.kqlData;
+	let layouts = $derived(data.kqlData.layouts);
 
-	$: console.log(data.kqlData.layouts[0].columns[0]);
+	let aboutPage = $derived(data.kqlData);
+
+	run(() => {
+		console.log(data.kqlData.layouts[0].columns[0]);
+	});
 </script>
 
 {#each layouts as { id, columns, attrs }}

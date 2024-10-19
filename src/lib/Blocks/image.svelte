@@ -2,7 +2,8 @@
 	import {page} from '$app/stores';
 	import ImageResolver from "./image-resolver.svelte";
 	import type {KirbyBlock} from 'kirby-types'
-	interface $$Props extends KirbyBlock<'image'> {
+	
+	interface Props {
 		id: string;
 		alt: string;
 		src: string;
@@ -11,23 +12,28 @@
 		ratio: string;
 		image: string[];
 	}
-	export let id: $$Props['id'];
-	export let alt: $$Props['alt'];
-	export let src: $$Props['src'];
-	export let location: $$Props['location'];
-	export let caption: $$Props['caption'];
-	export let ratio: $$Props['ratio'];
-	export let image: $$Props['image'];
+
+	let {
+		id,
+		alt,
+		src,
+		location,
+		caption,
+		ratio,
+		image
+	}: Props = $props();
 	
 	let images = $page.data.page.result.images;
 
-	let width: number
+	let width: number = $state()
 </script>
 
 <figure bind:clientWidth={width}>
-	<ImageResolver let:image collection={images} uuid={image[0]}>
-		<img src="{image?.url}" {alt} {id}/>
-	</ImageResolver>
+	<ImageResolver  collection={images} uuid={image[0]}>
+		{#snippet children({ image })}
+				<img src="{image?.url}" {alt} {id}/>
+					{/snippet}
+		</ImageResolver>
 	{#if caption}
 		<figcaption>{caption}</figcaption>
 	{/if}

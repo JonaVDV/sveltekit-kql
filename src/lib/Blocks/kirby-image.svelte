@@ -2,22 +2,26 @@
 	import type { KirbyBlock } from '$lib/types';
 	import { page } from '$app/stores';
 	import ImageResolver from './image-resolver.svelte';
-	interface $$Props extends KirbyBlock<'image'> {
+	
+	interface Props {
 		id: string;
 		alt: string;
 		src: string;
 		caption: string;
 		ratio: string;
 		image: string[];
-		link: string
+		link: string;
 		location: string;
 	}
-	export let id: $$Props['id'];
-	export let alt: $$Props['alt'];
-	export let caption: $$Props['caption'];
-	export let ratio: $$Props['ratio'];
-	export let image: $$Props['image'];
-	export let link: $$Props['link'];
+
+	let {
+		id,
+		alt,
+		caption,
+		ratio,
+		image,
+		link
+	}: Props = $props();
 	export const location: $$Props['location'] = '';
 	export const src: $$Props['src'] = '';
 
@@ -35,14 +39,18 @@
 <figure>
 	{#if link}
 		<a href="{link}">
-			<ImageResolver let:image collection={images} uuid={image[0]}>
-				<img src={image?.url} {alt} {id} />
-			</ImageResolver>
+			<ImageResolver  collection={images} uuid={image[0]}>
+				{#snippet children({ image })}
+								<img src={image?.url} {alt} {id} />
+											{/snippet}
+						</ImageResolver>
 		</a>
 	{:else}
-		<ImageResolver let:image collection={images} uuid={image[0]}>
-			<img src={image?.url} {alt} {id} />
-		</ImageResolver>
+		<ImageResolver  collection={images} uuid={image[0]}>
+			{#snippet children({ image })}
+						<img src={image?.url} {alt} {id} />
+								{/snippet}
+				</ImageResolver>
 	{/if}
 	{#if caption}
 		<figcaption>

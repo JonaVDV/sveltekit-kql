@@ -2,8 +2,13 @@
   type ImageResolverCollection = (Record<string, any>) & {
 	  url: string | null | undefined;uuid: string
 }[]
-  export let uuid: string;
-  export let collection: ImageResolverCollection
+  interface Props {
+    uuid: string;
+    collection: ImageResolverCollection;
+    children?: import('svelte').Snippet<[any]>;
+  }
+
+  let { uuid, collection, children }: Props = $props();
 
   if (!uuid) {
     throw new TypeError('Uuid must be provided')
@@ -41,5 +46,5 @@
 
 
 {#if image}
-  <slot {image} />
+  {@render children?.({ image, })}
 {/if}

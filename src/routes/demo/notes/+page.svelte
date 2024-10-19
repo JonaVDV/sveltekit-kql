@@ -1,11 +1,15 @@
 <script lang="ts">
 	import Note from '$lib/components/note.svelte';
 	import type { PageData } from './$types';
-	export let data;
+	interface Props {
+		data: any;
+	}
 
-	$: cmsData = data.kqlData;
+	let { data }: Props = $props();
 
-	$: notes = cmsData.children;
+	let cmsData = $derived(data.kqlData);
+
+	let notes = $derived(cmsData.children);
 
 	// $: console.log(cmsData.children[0]);
 </script>

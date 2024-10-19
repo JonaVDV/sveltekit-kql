@@ -4,11 +4,14 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { components } from '$lib';
 
-	interface $$Props extends HTMLAttributes<HTMLElement> {
+	
+
+	interface Props {
 		blocks: KirbyBlock[];
+		[key: string]: any
 	}
 
-	export let blocks: $$Props['blocks'];
+	let { blocks, ...rest }: Props = $props();
 
 	if (!Array.isArray(blocks)) {
 		throw new TypeError('Blocks must be an array');
@@ -20,7 +23,8 @@
 </script>
 
 {#each blocks as block}
-	<div {...$$restProps}>
-		<svelte:component this={$components[block.type]} {...block.content} />
+	{@const SvelteComponent = $components[block.type]}
+	<div {...rest}>
+		<SvelteComponent {...block.content} />
 	</div>
 {/each}

@@ -1,5 +1,9 @@
 <script lang="ts" generics="T extends Record<string, any>">
-	export let note: T;
+	interface Props {
+		note: T;
+	}
+
+	let { note }: Props = $props();
 
 	console.log(note.cover);
 

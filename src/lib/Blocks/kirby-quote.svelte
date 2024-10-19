@@ -1,13 +1,14 @@
 <script lang='ts'>
 	import type { KirbyBlock } from "kirby-types";
 
-  interface $$Props extends KirbyBlock<'quote'> {
+  
+
+  interface Props {
     text: string;
     citation: string;
   }
 
-  export let text: $$Props['content']['text'];
-  export let citation: $$Props['content']['citation'];
+  let { text, citation }: Props = $props();
 </script>
 
 <blockquote>

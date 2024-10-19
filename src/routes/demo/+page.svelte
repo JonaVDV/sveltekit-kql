@@ -1,7 +1,11 @@
 <script lang="ts">
-	export let data;
+	interface Props {
+		data: any;
+	}
 
-	$: cmsData = data.kqlData;
+	let { data }: Props = $props();
+
+	let cmsData = $derived(data.kqlData);
 </script>
 
 <div>

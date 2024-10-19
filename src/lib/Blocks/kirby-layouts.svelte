@@ -17,7 +17,15 @@
 		isEmpty: boolean;
 	}
 
-	interface $$Props extends HTMLAttributes<HTMLElement> {
+	
+
+	/**
+	 * **Custom layout component**
+	 *
+	 * usefull for if you want to render a custom layout in place of the default layout
+	 *
+	 */
+	interface Props {
 		layouts: KirbyLayout[];
 		customLayout?: ComponentType<
 			SvelteComponent<
@@ -27,39 +35,39 @@
 				>
 			>
 		>;
-		// css props
-		'--grid-gap'?: string;
+		undefined?: string;
+		components?: import('svelte').Snippet;
+		[key: string]: any
 	}
 
-	export let layouts: NonNullable<$$Props['layouts']>;
-	/**
-	 * **Custom layout component**
-	 *
-	 * usefull for if you want to render a custom layout in place of the default layout
-	 *
-	 */
-	export let customLayout: $$Props['customLayout'] = undefined;
+	let {
+		layouts,
+		customLayout = undefined,
+		components,
+		...rest
+	}: Props = $props();
 </script>
 
 <div>
 	{#each layouts as { id, columns, attrs }}
 		<section
-			{...$$restProps}
-			class={$$restProps['class'] ?? ''}
+			{...rest}
+			class={rest['class'] ?? ''}
 			class:grid-auto-columns={columns.length > 1 ?? null}
 			{id}
 		>
 			{#each columns as column}
 				<div>
-					<slot name="components">
+					{#if components}{@render components()}{:else}
 						<KirbyComponents blocks={column.blocks} class="text" />
-					</slot>
+					{/if}
 				</div>
 			{/each}
 		</section>
 
 		{#if customLayout}
-			<svelte:component this={customLayout} {id} {columns} {attrs} {$$restProps} />
+			{@const SvelteComponent_1 = customLayout}
+			<SvelteComponent_1 {id} {columns} {attrs} {rest} />
 		{/if}
 	{/each}
 </div>

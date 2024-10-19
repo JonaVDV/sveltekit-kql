@@ -1,11 +1,13 @@
 <script lang='ts'>
   import type { KirbyBlock } from "kirby-types";
 
-  interface $$Props extends KirbyBlock<'text'> {
+  
+
+  interface Props {
     text: string;
   }
 
-  export let text: $$Props['content']['text'];
+  let { text }: Props = $props();
 
 </script>
 

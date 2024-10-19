@@ -6,7 +6,12 @@
 	import KirbyQuote from '$lib/Blocks/kirby-quote.svelte';
 	import KirbyHeading from '$lib/Blocks/kirby-heading.svelte';
 
-	export let data;
+	interface Props {
+		data: any;
+		children?: import('svelte').Snippet;
+	}
+
+	let { data, children }: Props = $props();
 
 	$components = {
 		image: KirbyImage,
@@ -23,5 +28,5 @@
 </svelte:head> -->
 
 <main class="main">
-	<slot />
+	{@render children?.()}
 </main>
