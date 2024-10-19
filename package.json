@@ -19,7 +19,8 @@
 		"test:integration": "playwright test",
 		"test:unit": "vitest --ui --typecheck",
 		"lint": "prettier --check .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"prepare": "husky"
 	},
 	"exports": {
 		".": {
