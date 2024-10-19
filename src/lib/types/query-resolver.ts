@@ -1,4 +1,5 @@
 import type { Collection } from './collection';
+import type { Field } from './field';
 
 export type IsCollection<T> = T extends Collection<any> ? true : false;
 export type ToCollection<T> = T extends Collection<infer U> ? U : T;
@@ -53,7 +54,9 @@ type CompareAndGetFromQuery<
 > = Key extends keyof TSelectObject
 	? IsKeyBooleanType<TSelectObject, Key> extends true
 		? // make sure that if the type of the given key is a function, we return the return type of that function otherwise users need to call functions in their templats that don't return anything
-			FunctionToReturn<ExtractDefault<GetKeyFromQueryOrExtra<ToCollection<Query>, Key>>>
+			ExtractDefault<
+				FunctionToReturn<ExtractDefault<GetKeyFromQueryOrExtra<ToCollection<Query>, Key>>>
+			>
 		: IsCollection<TSelectObject[Key]> extends true
 			? KQLQueryTypeResolver<{
 					query: HandleDeepCollections<TSelectObject[Key]>['query'];
@@ -66,7 +69,7 @@ type CompareAndGetFromQuery<
 					}>,
 					TSelectObject[Key]['query']
 				>
-	: GetQueryTypeDefaultOrExtra<TSelectObject>;
+	: GetQueryTypeDefaultOrExtra<Query>;
 
 export type KQLQueryTypeResolver<T extends KQLQuery> = WrapIfCollection<
 	{
@@ -88,6 +91,34 @@ type HandleDeepCollections<T> =
 				};
 			}
 		: T;
+
+const AboutQuery = {
+	query: page('about'),
+	select: {
+		id: true,
+		title: true,
+		intendedTemplate: true,
+		description: true,
+		layouts: page().layout.toLayouts(),
+		address: page().address.kirbytext(),
+		email: true,
+		phone: true,
+		social: page().social.toStructure(),
+		images: {
+			query: page().images(),
+			select: {
+				id: true,
+				uuid: true,
+				url: true,
+				alt: true
+			}
+		}
+	}
+};
+
+type Result = HandleDeepCollections<typeof AboutQuery.select.layouts>;
+
+type Resolved = KQLQueryTypeResolver<Result>;
 
 export type KQLQuery = {
 	query: any;
