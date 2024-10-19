@@ -75,7 +75,7 @@ export interface Page
 	uid: () => string;
 	uri: (languageCode: string) => string;
 	url: (options: Array<any>) => string;
-	content: (languageCode?: string) => Content;
+	content: (languageCode?: string) => Content & { [key: string]: Field };
 	site: () => Site;
 	children: () => Pages;
 	childrenAndDrafts: () => Pages;
@@ -108,4 +108,6 @@ export interface Page
 	isNth: (n: number, collection: Array<any>) => boolean;
 }
 
-export interface Pages extends Collection<Page> {}
+export interface Pages extends Collection<Page> {
+	listed: () => Pages;
+}

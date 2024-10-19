@@ -4,14 +4,18 @@ import type { ServerLoadEvent } from '@sveltejs/kit';
 import { kqlHandler } from './kql-handler';
 import { transformQuery } from './utils';
 
-interface MultiQueryConfig {
-	[key: string]: {
-		query: KirbyQueryRequest;
+import type { KQLQuery, KQLQueryTypeResolver } from '$lib/types/query-resolver';
+
+type MultiQueryConfig<T extends Record<string, KQLQuery>> = {
+	[key in keyof T]: {
+		query: T[key];
 		options?: KQLLoadOptions;
 	};
-}
+};
 
-export function createMultiQueryLoad(config: MultiQueryConfig) {
+export function createMultiQueryLoad<T extends Record<string, KQLQuery>>(
+	config: MultiQueryConfig<T>
+) {
 	return async (event: ServerLoadEvent) => {
 		const { fetch, depends } = event;
 		const results: Map<string, any> = new Map();

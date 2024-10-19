@@ -4,6 +4,7 @@ export interface Content {
 	__default: {
 		[key: string]: string;
 	};
+	__extra: Field;
 	data: Record<string, Field>;
 	fields: () => {
 		[key: string]: Field;

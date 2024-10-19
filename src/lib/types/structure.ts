@@ -8,4 +8,8 @@ export interface StructureObject extends AllowedMethodsForSiblings {
 	id: () => string;
 	/**Returns the content*/
 	content: () => Content;
+
+	__default: {
+		[key: string]: string;
+	};
 }

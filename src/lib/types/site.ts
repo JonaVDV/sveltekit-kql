@@ -13,6 +13,7 @@ export interface Site
 	__extra: Field;
 	__default: {
 		title: string;
+		children: () => Pages;
 	};
 	// blueprint: () => Blueprint;
 	breadcrumb: () => Pages;

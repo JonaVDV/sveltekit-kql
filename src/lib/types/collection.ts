@@ -1,3 +1,5 @@
+import type { Pages } from './page';
+
 export interface Collection<TObject> {
 	__collection: TObject;
 
@@ -23,7 +25,7 @@ export interface Collection<TObject> {
 	// pluck: (field: string, split: string, unique: boolean) => Array;
 	shuffle: () => Array<any>;
 	slice: (offset: number, limit: number) => Array<any>;
-	sortBy: (args: Array<any>) => Array<any>;
+	sortBy: (...args: Array<string>) => Pages;
 	without: (keys: Array<any>) => Array<any>;
 	keys: () => string[];
 	prev: () => TObject | null;

@@ -142,7 +142,7 @@ export interface Field {
 	 */
 	toData: (method: ',' | 'yaml' | 'json') => Field;
 	/**Converts the field value to a timestamp or a formatted date*/
-	toDate: (format: string, fallback?: string) => string | number | null;
+	toDate: (format?: string, fallback?: string) => string | number | null;
 
 	/**Returns a file object from a filename in the field*/
 	toFile: () => File;

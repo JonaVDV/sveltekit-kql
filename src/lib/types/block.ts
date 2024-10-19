@@ -25,6 +25,6 @@ export interface Block extends AllowedMethodsForSiblings {
 
 export interface Blocks extends Collection<Block> {
 	/**Creates an excerpt of the field value without html or any other formatting. */
-	excerpt: (chars: number, strip: boolean, rep: string) => Field;
+	excerpt: (chars: number, strip?: boolean, rep?: string) => Field;
 	toHtml: () => string;
 }
