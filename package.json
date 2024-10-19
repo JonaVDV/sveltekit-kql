@@ -17,7 +17,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:integration": "playwright test",
-		"test:unit": "vitest",
+		"test:unit": "vitest --ui --typecheck",
 		"lint": "prettier --check .",
 		"format": "prettier --write ."
 	},
@@ -50,20 +50,21 @@
 		"@sveltejs/adapter-auto": "^3.2.4",
 		"@sveltejs/kit": "^2.5.24",
 		"@sveltejs/package": "^2.3.4",
-		"kirby-types": "^0.7.0",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
 		"@types/bun": "^1.1.8",
+		"kirby-types": "^0.7.0",
 		"prettier": "^3.3.3",
 		"prettier-plugin-svelte": "^3.2.6",
 		"publint": "^0.1.16",
-		"svelte": "^4.2.19",
+		"svelte": "^5.0.0",
 		"svelte-check": "^3.8.6",
 		"tslib": "^2.7.0",
 		"typescript": "^5.5.4",
 		"vite": "^5.4.2",
+		"@vitest/ui": "^2.1.2",
 		"vitest": "^1.6.0"
 	},
-	"packageManager": "bun@1.0.29",
+	"packageManager": "bun@1.1.31",
 	"engines": {
 		"node": ">=18",
 		"bun": ">=1.0.29"
