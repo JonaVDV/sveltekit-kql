@@ -43,7 +43,7 @@
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0",
 		"kirby-types": "^0.7.0",
-		"svelte": "^4.0.0"
+		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.46.1",
