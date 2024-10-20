@@ -39,7 +39,8 @@
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
+		"!dist/**/*.spec.*",
+		"README.md"
 	],
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0",
