@@ -1,9 +1,29 @@
+import type {
+	allowedMethodsForModels,
+	AllowedMethodsForParents,
+	AllowedMethodsForSiblings
+} from './allowedMethods';
 import type { Collection } from './collection';
+import type { Content } from './content';
 import type { Field } from './field';
 import type { Page } from './page';
 import type { Site } from './site';
 
-export interface File {
+type CropPositions =
+	| 'top left'
+	| 'top'
+	| 'top right'
+	| 'left'
+	| 'center'
+	| 'right'
+	| 'bottom left'
+	| 'bottom'
+	| 'bottom right';
+
+export interface File
+	extends allowedMethodsForModels,
+		AllowedMethodsForParents,
+		AllowedMethodsForSiblings {
 	__extra: Field;
 	__default: {
 		extension: () => string;
@@ -17,33 +37,22 @@ export interface File {
 		url: () => string;
 		width: () => number;
 	};
-	apiUrl: (relative: boolean) => string;
-	blueprint: () => FileBlueprint;
+	blur: (pixels: number | boolean) => File;
+	bw: () => File;
+	crop: (width: number, height: number, options?: CropPositions | string) => File;
+	extension: () => string;
 	filename: () => string;
 	files: () => Files;
 	html: (attr: Array) => string;
 	id: () => string;
 	mediaUrl: () => string;
-	modified: (
-		format: string | null,
-		handler: string,
-		languageCode: string
-	) => string | number | false;
-	panel: () => File;
-	parent: () => Page | Site | User;
 	parentId: () => string;
 	permalink: () => string;
-	permissions: () => FilePermissions;
-	site: () => Site;
 	template: () => string;
 	templateSiblings: (self: boolean) => Files;
 	url: () => string;
 	height: () => number;
 	previewUrl: () => string;
-	content: (languageCode: string) => Content;
-	blur: (pixels: number | boolean) => File;
-	bw: () => File;
-	crop: (width: number, height: number, options: Array<any>) => File;
 	grayscale: () => File;
 	greyscale: () => File;
 	resize: (width?: number, height?: number, quality?: number) => File;
@@ -54,11 +63,6 @@ export interface File {
 	nextAll: (collection: Array<any>) => Array<any>;
 	prev: (collection: Array<any>) => Array<any>;
 	prevAll: (collection: Array<any>) => Array<any>;
-	siblings: (self: boolean) => Array<any>;
-	hasNext: (collection: Array<any>) => boolean;
-	hasPrev: (collection: Array<any>) => boolean;
-	isFirst: (collection: Array<any>) => boolean;
-	isLast: (collection: Array<any>) => boolean;
 	isNth: (n: number, collection: Array<any>) => boolean;
 	exists: () => boolean;
 	type: () => string;
