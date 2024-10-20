@@ -1,9 +1,10 @@
 <script lang="ts" generics="T extends Record<string, any>">
 	interface Props {
 		note: T;
+		excerpt: boolean;
 	}
 
-	let { note }: Props = $props();
+	let { note, excerpt }: Props = $props();
 
 	console.log(note.cover);
 
@@ -25,7 +26,6 @@
 				{:else}
 					<img src={note.images[0].url} alt="" />
 				{/if}
-				<!-- <img src={note.cover.url} alt="" /> -->
 			</figure>
 
 			<h2 class="note-excerpt-title">
@@ -37,7 +37,7 @@
 				</time>
 			{/if}
 
-			{#if note.excerpt}
+			{#if excerpt}
 				<div class="note-excerpt-text">
 					{note.text}
 				</div>

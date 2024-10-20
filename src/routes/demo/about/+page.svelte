@@ -4,8 +4,9 @@
 	// import type { KQLData } from './$kql';
 	import { KirbyLayouts } from '$lib';
 	import KirbyComponents from '$lib/Blocks/kirby-components.svelte';
+	import type { PageData } from './$types';
 	interface Props {
-		data: any;
+		data: PageData;
 	}
 
 	let { data }: Props = $props();
