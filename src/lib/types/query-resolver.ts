@@ -57,10 +57,7 @@ type CompareAndGetFromQuery<
 					TSelectObject[Key]['query']
 				>
 			: TSelectObject[Key] extends Collection<any>
-				? KQLQueryTypeResolver<{
-						query: HandleDeepCollections<TSelectObject[Key]>['query'];
-						select: HandleDeepCollections<TSelectObject[Key]>['select'];
-					}>
+				? KQLQueryTypeResolver<HandleDeepCollections<TSelectObject[Key]>>
 				: ExtractDefault<TSelectObject[Key]>
 	: GetQueryTypeDefaultOrExtra<Query>;
 export type KQLQueryTypeResolver<T extends KQLQuery> = WrapIfCollection<
