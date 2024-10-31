@@ -12,12 +12,12 @@ export interface KQLClientOptions {
 }
 
 async function getKirbyEnv() {
-	const kirbyEnv = await import('$env/static/private');
+	const { env } = await import('$env/dynamic/private');
 	const kirbyEnvKeys: Partial<Record<string, string>> = {
-		KIRBY_HEADLESS_API_TOKEN: kirbyEnv.KIRBY_HEADLESS_API_TOKEN,
-		KIRBY_HEADLESS_API_USER: kirbyEnv.KIRBY_HEADLESS_API_USER,
-		KIRBY_HEADLESS_API_PASSWORD: kirbyEnv.KIRBY_HEADLESS_API_PASSWORD,
-		KIRBY_HEADLESS_API_URL: kirbyEnv.KIRBY_HEADLESS_API_URL
+		KIRBY_HEADLESS_API_TOKEN: env.KIRBY_HEADLESS_API_TOKEN,
+		KIRBY_HEADLESS_API_USER: env.KIRBY_HEADLESS_API_USER,
+		KIRBY_HEADLESS_API_PASSWORD: env.KIRBY_HEADLESS_API_PASSWORD,
+		KIRBY_HEADLESS_API_URL: env.KIRBY_HEADLESS_API_URL
 	};
 
 	return kirbyEnvKeys;
@@ -70,7 +70,7 @@ export async function kqlHandler<T extends KirbyQueryResponse>(
 	} = options;
 
 	const auth = await handleAuth(authentication);
-	const urlFallback = (await import('$env/static/private')).KIRBY_HEADLESS_API_URL;
+	const urlFallback = (await import('$env/dynamic/private')).env.KIRBY_HEADLESS_API_URL;
 
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), timeout);

@@ -9,9 +9,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		// this is for the kirby types package otherwise typescript will throw an error
-		// luckily for sveltekit projects these are the default values
 		"module": "ESNext",
 		"moduleResolution": "Bundler"
 	}
+	// "include": ["src/lib/*.d.ts"]
 }

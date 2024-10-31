@@ -1,6 +1,6 @@
 import type { Field } from './field';
 
-export interface Content {
+export type Content = {
 	__default: {
 		[key: string]: string;
 	};
@@ -15,4 +15,4 @@ export interface Content {
 	keys: () => string[];
 	/**Returns a clone of the content object without the fields, specified by the passed key(s) */
 	not: (...keys: string[]) => Content;
-}
+};

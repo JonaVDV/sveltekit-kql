@@ -43,7 +43,7 @@ export interface File
 	extension: () => string;
 	filename: () => string;
 	files: () => Files;
-	html: (attr: Array) => string;
+	// html: (attr: Array) => string;
 	id: () => string;
 	mediaUrl: () => string;
 	parentId: () => string;
@@ -57,13 +57,12 @@ export interface File
 	greyscale: () => File;
 	resize: (width?: number, height?: number, quality?: number) => File;
 	srcset: (sizes: Array<string> | string | null) => string;
-	thumb: (options: Array<any> | string | null) => File;
+	thumb: (options?: Array<any> | string | null) => File;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
 	prev: (collection: Array<any>) => Array<any>;
 	prevAll: (collection: Array<any>) => Array<any>;
-	isNth: (n: number, collection: Array<any>) => boolean;
 	exists: () => boolean;
 	type: () => string;
 }

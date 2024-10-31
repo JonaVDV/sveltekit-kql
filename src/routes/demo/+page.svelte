@@ -1,6 +1,8 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+
 	interface Props {
-		data: any;
+		data: PageData;
 	}
 
 	let { data }: Props = $props();
@@ -8,7 +10,7 @@
 	let cmsData = $derived(data.kqlData);
 </script>
 
-<div>
+<!-- <div>
 	<ul class="home-grid">
 		{#each cmsData as album, index}
 			<li>
@@ -29,9 +31,9 @@
 			</li>
 		{/each}
 	</ul>
-</div>
+</div> -->
 
-<style>
+<!-- <style>
 	.home-grid {
 		display: grid;
 		list-style: none;
@@ -104,4 +106,4 @@
 			padding-bottom: 52.65%;
 		}
 	}
-</style>
+</style> -->

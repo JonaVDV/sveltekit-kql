@@ -1,5 +1,7 @@
-import { kqlLoad } from '$lib/server';
+import { kqlLoad } from '$lib/server/kql-load';
+// import { kirbyGlobals } from '../../../lib';
 import type { PageServerLoad } from './$types';
+import { page } from '$lib/kql';
 
 const notesQuery = {
 	query: page('notes'),

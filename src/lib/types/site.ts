@@ -13,7 +13,8 @@ export interface Site
 	__extra: Field;
 	__default: {
 		title: string;
-		children: () => Pages;
+		children: string[];
+		url: string;
 	};
 	// blueprint: () => Blueprint;
 	breadcrumb: () => Pages;
@@ -31,12 +32,12 @@ export interface Site
 	// permissions: () => SitePermissions;
 	previewUrl: () => string;
 	// search: (query: string, params: Array | string) => Pages;
-	url: (language: string) => string; // fields: () => Array;
+	// url: (language: string) => string; // fields: () => Array;
 	// isDefault: () => boolean;
 	// name: () => string;
 	// section: (name: string) => Section;
 	// sections: () => Array;
 	// tab: (name: string) => Array;
 	// tabs: () => Array;
-	// title: () => string;
+	title: () => Field;
 }
