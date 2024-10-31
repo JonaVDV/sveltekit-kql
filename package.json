@@ -11,7 +11,7 @@
 		"dev": "vite dev",
 		"build": "vite build && bun run package",
 		"preview": "vite preview",
-		"package": "svelte-kit sync && svelte-package -w && publint",
+		"package": "svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "bun run package",
 		"test": "bun run test:integration && bun run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
