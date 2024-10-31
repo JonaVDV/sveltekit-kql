@@ -1,6 +1,8 @@
+import { page, site } from '$lib/kql';
 import type { Collection } from '$lib/types/collection';
 import type { Field } from '$lib/types/field';
 import type { Page } from '$lib/types/page';
+import type { Site } from '$lib/types/site';
 import type {
 	ExtractDefault,
 	KQLQueryTypeResolver,
@@ -9,48 +11,15 @@ import type {
 	GetKeyFromQueryOrExtra,
 	IsKeyBooleanType
 } from '$lib/types/query-resolver';
-import type { Site } from '$lib/types/site';
 import { it, expect, expectTypeOf, describe, assertType, beforeAll } from 'vitest';
 
 type Equals<X, Y> =
 	(<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
 
-type ProxyHandler<T> = {
-	get(target: T, prop: string | symbol, receiver: any): any;
-	apply(target: T, thisArg: any, argArray?: any): any;
-};
-
-function proxyHandler<T>(path: string): ProxyHandler<T> {
-	return {
-		get(target, prop) {
-			if (prop === 'toString') {
-				return () => path;
-			}
-			return createKQLProxy(path + (path ? '.' : '') + String(prop));
-		},
-		apply(target, thisArg, args) {
-			const argsString =
-				args.length > 0 ? `(${args.map((arg) => JSON.stringify(arg)).join(', ')})` : '';
-			return createKQLProxy(path + argsString);
-		}
-	};
-}
-
-function createKQLProxy<T>(path = ''): T {
-	return new Proxy(() => {}, proxyHandler<T>(path)) as unknown as T;
-}
-
-beforeAll(() => {
-	globalThis.page = createKQLProxy('page');
-	globalThis.site = createKQLProxy('site');
-	globalThis.kirby = createKQLProxy('kirby');
-	globalThis.file = createKQLProxy('file');
-});
-
 describe('KQLQueryTypeResolver', () => {
 	it('should correctly infer the type of a short query', () => {
 		const query = {
-			query: {} as Page,
+			query: page(),
 			select: {
 				id: true,
 				title: true
@@ -74,6 +43,8 @@ describe('KQLQueryTypeResolver', () => {
 
 		type Expected = {
 			title: string;
+			children: string[];
+			url: string;
 		};
 		type Result = KQLQueryTypeResolver<typeof query>;
 
@@ -102,7 +73,7 @@ describe('Extract Default type', () => {
 		type Expected = Test;
 		type Result = ExtractDefault<Test>;
 
-		assertType<Equals<Result, Expected>>(true);
+		expectTypeOf<Result>().toEqualTypeOf<Expected>();
 	});
 });
 

@@ -89,12 +89,6 @@ export interface Page
 	hasListedChildren: () => boolean;
 	hasUnlistedChildren: () => boolean;
 	index: (drafts: boolean) => Pages;
-	audio: () => Files;
-	code: () => Files;
-	documents: () => Files;
-	// image: (filename: string) => File;
-	images: () => Files;
-	videos: () => Files;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
@@ -104,7 +98,7 @@ export interface Page
 	hasNext: (collection: Array<any>) => boolean;
 	hasPrev: (collection: Array<any>) => boolean;
 	isFirst: (collection: Array<any>) => boolean;
-	isLast: (collection: Array<any>) => boolean;
+	// isLast: (collection: Array<any>) => boolean;
 	isNth: (n: number, collection: Array<any>) => boolean;
 }
 
