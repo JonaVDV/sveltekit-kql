@@ -7,7 +7,7 @@
 	let cmsData = $derived(data.kqlData);
 </script>
 
-<article>
+<!-- <article>
 	<Intro />
 
 	<div class="grid">
@@ -37,4 +37,4 @@
 			</ul>
 		</div>
 	</div>
-</article>
+</article> -->
