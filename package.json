@@ -63,6 +63,8 @@
 		"@sveltejs/package": "^2.3.4",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.0",
 		"@types/bun": "^1.1.8",
+		"@vitest/ui": "^2.1.2",
+		"husky": "^9.1.6",
 		"kirby-types": "^0.7.0",
 		"prettier": "^3.3.3",
 		"prettier-plugin-svelte": "^3.2.6",
@@ -72,7 +74,6 @@
 		"tslib": "^2.7.0",
 		"typescript": "^5.5.4",
 		"vite": "^5.4.4",
-		"@vitest/ui": "^2.1.2",
 		"vitest": "^1.6.0"
 	},
 	"packageManager": "bun@1.1.31",
