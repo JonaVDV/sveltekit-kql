@@ -1,3 +1,4 @@
+import { file, page } from '$lib/kql';
 import { kqlLoad } from '$lib/server';
 import type { PageServerLoad } from './$types';
 

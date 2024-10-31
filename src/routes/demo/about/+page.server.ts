@@ -1,6 +1,7 @@
 import { kqlLoad } from '$lib/server';
 import type { KirbyQuerySchema } from 'kirby-types';
 import type { PageServerLoad } from './$types';
+import { page } from '$lib/kql';
 
 const AboutQuery = {
 	query: page('about'),
