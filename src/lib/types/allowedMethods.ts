@@ -147,8 +147,8 @@ export interface AllowedMethodsForSiblings {
 	isLast: () => boolean;
 	/**
 	 * Checks if the item is at a certain position
-	 * @param n 
-	 * @returns 
+	 * @param n
+	 * @returns
 	 */
 	isNth: (n: number) => boolean;
 }
