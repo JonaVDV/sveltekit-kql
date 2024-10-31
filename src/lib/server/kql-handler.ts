@@ -51,7 +51,7 @@ async function handleAuth(authMethod: KQLClientOptions['authentication']) {
 		);
 	}
 
-	throw new Error('Invalid authentication method');
+	// throw new Error('Invalid authentication method');
 }
 
 export async function kqlHandler<T extends KirbyQueryResponse>(
