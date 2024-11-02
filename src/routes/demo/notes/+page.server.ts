@@ -1,7 +1,6 @@
-import { kqlLoad } from '$lib/server/kql-load';
-// import { kirbyGlobals } from '../../../lib';
-import type { PageServerLoad } from './$types';
 import { page } from '$lib/kql';
+import { transformQuery } from '$lib/server/utils';
+import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
 
 const notesQuery = {
 	query: page('notes'),
@@ -36,4 +35,15 @@ const notesQuery = {
 		}
 	}
 };
-export const load = kqlLoad(notesQuery);
+export const load = async ({ fetch }) => {
+	const response = await fetch('./api/cms', {
+		method: 'POST',
+		body: JSON.stringify(transformQuery(notesQuery))
+	});
+
+	const data = (await response.json()) as KQLQueryTypeResolver<typeof notesQuery>;
+
+	return {
+		page: data
+	};
+};

@@ -1,5 +1,5 @@
 import { file, page } from '$lib/kql';
-import { kqlLoad } from '$lib/server';
+import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
 import type { PageServerLoad } from './$types';
 
 const photographyQuery = {
@@ -46,4 +46,15 @@ const photographyQuery = {
 	}
 };
 
-export const load = kqlLoad(photographyQuery);
+export const load = async ({ fetch }) => {
+	const response = await fetch('./api/cms', {
+		method: 'POST',
+		body: JSON.stringify(photographyQuery)
+	});
+
+	const data = (await response.json()) as KQLQueryTypeResolver<typeof photographyQuery>;
+
+	return {
+		page: data
+	};
+};

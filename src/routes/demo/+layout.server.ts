@@ -1,20 +1,21 @@
-// import { createKql } from '$lib/server';
-// import type { KirbyQuerySchema } from 'kirby-types';
-// import type { LayoutServerLoad } from './$types.d.ts';
-
-// import { site } from '$lib/kql';
 import { site } from '$lib/kql';
-import { kqlLoad } from '$lib/server';
+import { transformQuery } from '$lib/server/utils';
+import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
+import type { LayoutServerLoad } from './$types';
 
-export const load = kqlLoad(
-	{
-		query: site().children()
-	},
-	{
-		transform: (data) => {
-			return {
-				site: data
-			};
-		}
-	}
-);
+const siteQuery = {
+	query: site()
+};
+
+export const load: LayoutServerLoad = async ({ fetch }) => {
+	const response = await fetch('./api/cms', {
+		method: 'POST',
+		body: JSON.stringify(transformQuery(siteQuery))
+	});
+
+	const data = (await response.json()) as KQLQueryTypeResolver<typeof siteQuery>;
+
+	return {
+		site: data
+	};
+};
