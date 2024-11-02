@@ -35,10 +35,6 @@
 			"svelte": "./dist/index.js",
 			"import": "./dist/server/index.js"
 		},
-		"./blocks": {
-			"svelte": "./dist/index.js",
-			"import": "./dist/Blocks/index.js"
-		},
 		"./kql": {
 			"types": "./dist/kql/index.d.ts",
 			"import": "./dist/kql/index.js"
@@ -79,7 +75,7 @@
 	},
 	"packageManager": "bun@1.1.31",
 	"engines": {
-		"node": ">=18",
+		"node": ">=20",
 		"bun": ">=1.0.29"
 	},
 	"svelte": "./dist/index.js",
