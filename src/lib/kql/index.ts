@@ -21,7 +21,7 @@ type ProxyHandler<T> = {
  * @template T The base type that may contain an __extra property
  * @property `{T['__extra'] | any}` `[key: string]` Dynamic property accessor
  */
-type WithDynamicProps<T extends { __extra?: any }> = T & {
+export type WithDynamicProps<T extends { __extra?: any }> = T & {
 	[key: string]: T extends { __extra: any } ? T['__extra'] : any;
 };
 
@@ -35,7 +35,7 @@ type WithDynamicProps<T extends { __extra?: any }> = T & {
  * const proxy = new Proxy(target, handler);
  * proxy.title.toString() // Returns "site.title"
  */
-function proxyHandler<T extends { __extra?: any }>(path: string): ProxyHandler<T> {
+export function proxyHandler<T extends { __extra?: any }>(path: string): ProxyHandler<T> {
 	return {
 		get(_target, prop: string | symbol) {
 			if (prop === 'toString') {
@@ -56,7 +56,9 @@ function proxyHandler<T extends { __extra?: any }>(path: string): ProxyHandler<T
  * @param {string} [path=''] The initial path for the query
  * @returns {WithDynamicProps<T>} A proxy object that can be used to build queries
  */
-function createKQLProxy<T extends { __extra?: any }>(path: string = ''): WithDynamicProps<T> {
+export function createKQLProxy<T extends { __extra?: any }>(
+	path: string = ''
+): WithDynamicProps<T> {
 	// important to use Object.assign here to make sure that the target is a function
 	const target = Object.assign(() => {}, {} as WithDynamicProps<T>);
 	return new Proxy(target, proxyHandler<T>(path));
@@ -77,7 +79,8 @@ export const site = (): WithDynamicProps<Site> => createKQLProxy<Site>('site');
  * @example
  * page().title.toString() // Returns "page.title"
  */
-export const page = (page?: string): WithDynamicProps<Page> => createKQLProxy<Page>('page');
+export const page = (page?: string): WithDynamicProps<Page> =>
+	createKQLProxy<Page>(page ? `page('${page}')` : 'page');
 
 /**
  * Creates a query builder for the Kirby application object
