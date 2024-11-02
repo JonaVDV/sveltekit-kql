@@ -38,8 +38,8 @@ export interface Page
 		url: string;
 	};
 	// apiUrl: (relative: boolean | true) => string;
-	blueprint: () => Blueprint;
-	blueprints: (inSection: string) => Array<Blueprint>;
+	// blueprint: () => Blueprint;
+	// blueprints: (inSection: string) => Array<Blueprint>;
 	depth: () => number;
 	exists: () => boolean;
 	hasTemplate: () => boolean;
@@ -74,13 +74,13 @@ export interface Page
 	title: Field;
 	uid: () => string;
 	uri: (languageCode: string) => string;
-	url: (options: Array<any>) => string;
+	// url: (options: Array<any>) => string;
 	content: (languageCode?: string) => Content & { [key: string]: Field };
 	site: () => Site;
 	children: () => Pages;
 	childrenAndDrafts: () => Pages;
-	draft: (path: string) => Page;
-	drafts: () => Pages;
+	// draft: (path: string) => Page;
+	// drafts: () => Pages;
 	// find: (arguments: Array | string) => Page | Pages | null;
 	findPageOrDraft: (path: string) => Page;
 	grandChildren: () => Pages;
@@ -88,7 +88,7 @@ export interface Page
 	hasDrafts: () => boolean;
 	hasListedChildren: () => boolean;
 	hasUnlistedChildren: () => boolean;
-	index: (drafts: boolean) => Pages;
+	// index: (drafts: boolean) => Pages;
 	indexOf: (collection: Array<any>) => number | false;
 	next: (collection: Array<any>) => Array<any>;
 	nextAll: (collection: Array<any>) => Array<any>;
@@ -99,7 +99,7 @@ export interface Page
 	hasPrev: (collection: Array<any>) => boolean;
 	isFirst: (collection: Array<any>) => boolean;
 	// isLast: (collection: Array<any>) => boolean;
-	isNth: (n: number, collection: Array<any>) => boolean;
+	// isNth: (n: number, collection: Array<any>) => boolean;
 }
 
 export interface Pages extends Collection<Page> {
