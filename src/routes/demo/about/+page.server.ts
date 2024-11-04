@@ -1,7 +1,7 @@
-import { kqlLoad } from '$lib/server';
-import type { KirbyQuerySchema } from 'kirby-types';
-import type { PageServerLoad } from './$types';
 import { page } from '$lib/kql';
+import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
+import type { PageServerLoad } from './$types';
+import { transformQuery } from '$lib/server/utils';
 
 const AboutQuery = {
 	query: page('about'),
@@ -27,4 +27,15 @@ const AboutQuery = {
 	}
 };
 
-export const load = kqlLoad(AboutQuery) satisfies PageServerLoad;
+export const load: PageServerLoad = async ({ fetch }) => {
+	const response = await fetch('./api/cms', {
+		method: 'POST',
+		body: JSON.stringify(transformQuery(AboutQuery))
+	});
+
+	const data = (await response.json()) as KQLQueryTypeResolver<typeof AboutQuery>;
+
+	return {
+		page: data
+	};
+};

@@ -1,96 +1,48 @@
-import type { KirbyQueryRequest, KirbyQueryResponse } from 'kirby-types';
-
-export interface KQLClientOptions {
+import { env } from '$env/dynamic/private';
+import { error } from '@sveltejs/kit';
+import { transformQuery } from './utils';
+import type { KQLQuery } from '$lib/types/query-resolver';
+export interface KqlRequest {
+	query: KQLQuery;
+	endpoint: string;
+	fetch: typeof globalThis.fetch;
 	language?: string;
-	cache?: boolean;
-	headers?: Record<string, string>;
-	credentials?: RequestCredentials;
-	authentication?: 'bearer' | 'basic';
-	fetch?: typeof globalThis.fetch;
-	kirbyUrl?: string;
+	auth?: `Bearer ${string}` | `Basic ${string}`;
+	headers?: HeadersInit;
 	timeout?: number;
 }
+// give me an example of a basic auth header:
 
-async function getKirbyEnv() {
-	const { env } = await import('$env/dynamic/private');
-	const kirbyEnvKeys: Partial<Record<string, string>> = {
-		KIRBY_HEADLESS_API_TOKEN: env.KIRBY_HEADLESS_API_TOKEN,
-		KIRBY_HEADLESS_API_USER: env.KIRBY_HEADLESS_API_USER,
-		KIRBY_HEADLESS_API_PASSWORD: env.KIRBY_HEADLESS_API_PASSWORD,
-		KIRBY_HEADLESS_API_URL: env.KIRBY_HEADLESS_API_URL
-	};
-
-	return kirbyEnvKeys;
-}
-
-async function handleAuth(authMethod: KQLClientOptions['authentication']) {
-	// TODO: surely there's a better way to do this
-	const kirbyEnvKeys = await getKirbyEnv();
-	if (!kirbyEnvKeys.KIRBY_HEADLESS_API_URL) {
-		throw new Error('KIRBY_HEADLESS_API_URL is not defined in the .env file');
-	}
-
-	if (authMethod === 'bearer') {
-		if (!kirbyEnvKeys.KIRBY_HEADLESS_API_TOKEN) {
-			throw new Error('KIRBY_HEADLESS_API_TOKEN is not defined in the .env file');
-		}
-		return 'Bearer ' + kirbyEnvKeys.KIRBY_HEADLESS_API_TOKEN;
-	}
-
-	if (authMethod === 'basic') {
-		if (!kirbyEnvKeys.KIRBY_HEADLESS_API_USER || !kirbyEnvKeys.KIRBY_HEADLESS_API_PASSWORD) {
-			throw new Error(
-				'KIRBY_HEADLESS_API_USER or KIRBY_HEADLESS_API_PASSWORD is not defined in the .env file'
-			);
-		}
-		return (
-			'Basic ' +
-			Buffer.from(
-				`${kirbyEnvKeys.KIRBY_HEADLESS_API_USER}:${kirbyEnvKeys.KIRBY_HEADLESS_API_PASSWORD}`
-			).toString('base64')
-		);
-	}
-
-	throw new Error('Invalid authentication method');
-}
-
-export async function kqlHandler<T extends KirbyQueryResponse>(
-	query: KirbyQueryRequest,
-	options: KQLClientOptions = {}
-): Promise<T> {
-	const {
-		language,
-		authentication = 'bearer',
-		credentials = 'include',
-		cache = true,
-		headers = {},
-		fetch = globalThis.fetch,
-		kirbyUrl,
-		timeout = 30000 // 30 seconds
-	} = options;
-
-	const auth = await handleAuth(authentication);
-	const urlFallback = (await import('$env/dynamic/private')).env.KIRBY_HEADLESS_API_URL;
-
-	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), timeout);
+export async function kqlHandler({
+	query,
+	endpoint,
+	language,
+	fetch,
+	auth,
+	headers = {},
+	timeout
+}: KqlRequest) {
+	let controller: AbortController | undefined;
+	let timeoutId: Timer | undefined;
 
 	try {
-		const url = kirbyUrl || urlFallback;
-		const response = await fetch(url, {
+		if (timeout) {
+			controller = new AbortController();
+			timeoutId = setTimeout(() => controller?.abort(), timeout);
+		}
+
+		const queryBody = transformQuery(query);
+
+		const response = await fetch(endpoint, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				...(language && { 'X-Language': language }),
 				...headers,
-				Authorization: auth
-			},
-			credentials,
-			body: JSON.stringify({
-				query: query.query,
-				select: query.select
-			}),
-			signal: controller.signal
+				...(auth && { Authorization: auth })
+			} satisfies HeadersInit,
+			body: JSON.stringify(queryBody),
+			...(controller && { signal: controller.signal })
 		});
 
 		if (!response.ok) {
@@ -100,8 +52,8 @@ export async function kqlHandler<T extends KirbyQueryResponse>(
 			);
 		}
 
-		return await response.json();
+		return response.json();
 	} finally {
-		clearTimeout(timeoutId);
+		if (timeoutId) clearTimeout(timeoutId);
 	}
 }

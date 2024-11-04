@@ -93,11 +93,6 @@ export type KQLQuery = {
 		page?: number;
 	};
 };
-export type KQLQueryResult<T> = {
-	result: T;
-	status: string;
-	code: number;
-};
 
 export type HandleDeepCollections<T> =
 	T extends Collection<infer U>

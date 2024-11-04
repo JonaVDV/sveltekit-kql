@@ -1,2 +1,1 @@
-export { kqlLoad, type KQLLoadOptions } from './kql-load';
-export { createMultiQueryLoad } from './multi-query';
+export { kqlHandler } from './kql-handler';
