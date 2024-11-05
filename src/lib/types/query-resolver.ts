@@ -1,5 +1,4 @@
 import type { Collection } from './collection';
-import type { Site } from './site';
 type ExtractBaseType<T> = T extends (...args: any[]) => infer R
 	? ExtractBaseType<R>
 	: T extends { __default: any }
@@ -56,9 +55,7 @@ type CompareAndGetFromQuery<
 > = Key extends keyof TSelectObject
 	? IsKeyBooleanType<TSelectObject, Key> extends true
 		? // make sure that if the type of the given key is a function, we return the return type of that function otherwise users need to call functions in their templats that don't return anything
-			ExtractDefault<
-				FunctionToReturn<ExtractDefault<GetKeyFromQueryOrExtra<CollectionItemType<Query>, Key>>>
-			>
+			ExtractBaseType<GetKeyFromQueryOrExtra<CollectionItemType<Query>, Key>>
 		: TSelectObject[Key] extends KQLQuery
 			? WrapIfCollection<
 					KQLQueryTypeResolver<{
@@ -67,9 +64,9 @@ type CompareAndGetFromQuery<
 					}>,
 					TSelectObject[Key]['query']
 				>
-			: TSelectObject[Key] extends Collection<any>
+			: IsCollection<TSelectObject[Key]> extends true
 				? KQLQueryTypeResolver<HandleDeepCollections<TSelectObject[Key]>>
-				: ExtractDefault<TSelectObject[Key]>
+				: ExtractBaseType<TSelectObject[Key]>
 	: GetQueryTypeDefaultOrExtra<Query>;
 export type KQLQueryTypeResolver<T extends KQLQuery> = T extends { select: infer S }
 	? WrapIfCollection<
@@ -100,7 +97,7 @@ export type HandleDeepCollections<T> =
 				query: Collection<U>;
 				select: {
 					[K in keyof ExtractDefault<U>]: HandleDeepCollections<
-						FunctionToReturn<ExtractDefault<U>[K]> extends Collection<any>
+						IsCollection<FunctionToReturn<ExtractDefault<U>[K]>> extends true
 							? FunctionToReturn<ExtractDefault<U>[K]>
 							: true
 					>;
