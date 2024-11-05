@@ -26,16 +26,16 @@ export interface File
 		AllowedMethodsForSiblings {
 	__extra: Field;
 	__default: {
-		extension: () => string;
-		filename: () => string;
-		height: () => number;
-		id: () => string;
-		mime: () => string;
-		niceSize: () => string;
-		template: () => string;
-		type: () => string;
-		url: () => string;
-		width: () => number;
+		extension: string;
+		filename: string;
+		height: number;
+		id: string;
+		mime: string;
+		niceSize: string;
+		template: string;
+		type: string;
+		url: string;
+		width: number;
 	};
 	blur: (pixels: number | boolean) => File;
 	bw: () => File;
