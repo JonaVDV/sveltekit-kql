@@ -1,9 +1,8 @@
+import type { KirbyBlock, KirbyBlockType } from './blocks';
 import type { Field } from './field';
 
 export type Content = {
-	__default: {
-		[key: string]: string;
-	};
+	__default: KirbyBlock<KirbyBlockType>;
 	__extra: Field;
 	data: Record<string, Field>;
 	fields: () => {

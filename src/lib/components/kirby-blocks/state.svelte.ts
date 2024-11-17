@@ -1,13 +1,14 @@
 import { getContext, setContext, type Component } from 'svelte';
+import type { BlocksMap, KirbyBlockType, KirbyComponentProps } from '$lib/types/blocks';
 
 export class KirbyBlocks {
-	blocks: Record<string, Component> = $state({});
+	blocks: BlocksMap = $state({});
 
-	constructor(blocks: Record<string, Component>) {
+	constructor(blocks: BlocksMap) {
 		this.blocks = blocks;
 	}
 
-	setBlocks(blocks: Record<string, Component>) {
+	setBlocks(blocks: BlocksMap) {
 		this.blocks = blocks;
 	}
 
@@ -16,14 +17,14 @@ export class KirbyBlocks {
 		return Object.keys(this.blocks);
 	}
 
-	getBlock(name: string) {
+	getBlock<T extends KirbyBlockType>(name: T): Component<KirbyComponentProps<T>> | undefined {
 		return this.blocks[name];
 	}
 }
 
 const KEY = Symbol('kirby-blocks' as const);
 
-export function setBlocksContext(blocks: Record<string, Component>) {
+export function setBlocksContext(blocks: BlocksMap) {
 	return setContext(KEY, new KirbyBlocks(blocks));
 }
 
