@@ -1,7 +1,7 @@
-<script
-	lang="ts"
-	generics="TBlocks extends Array<{type: string, isHidden: boolean, id: string, content: any}>"
->
+<!-- we use any here because we don't know the type of the blocks yet and the type will be too complex to define -->
+<script lang="ts" generics="TBlocks extends KirbyBlock<any>[]">
+	import type { KirbyBlock } from '$lib/types/blocks';
+
 	import { getBlocksContext } from './state.svelte';
 
 	const components = getBlocksContext();
@@ -18,6 +18,7 @@
 			Component not found: <span>{block.type}</span> in <span
 				>{JSON.stringify(components.getAllBlocks())}</span
 			>
+			Did you forget to add it to the blocks context?
 		</pre>
 	{/if}
 {/each}
