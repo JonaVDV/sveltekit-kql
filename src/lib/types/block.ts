@@ -1,4 +1,5 @@
 import type { AllowedMethodsForSiblings } from './allowedMethods';
+import type { KirbyBlockType } from './blocks';
 import type { Collection } from './collection';
 import type { Content } from './content';
 import type { Field } from './field';
@@ -9,7 +10,7 @@ export interface Block extends AllowedMethodsForSiblings {
 		id: () => string;
 		isEmpty: () => boolean;
 		isHidden: () => boolean;
-		type: () => string;
+		type: () => KirbyBlockType;
 	};
 
 	content: () => Content;
@@ -20,7 +21,7 @@ export interface Block extends AllowedMethodsForSiblings {
 	toField: () => Field;
 	toHtml: () => string;
 	parent: () => Content;
-	type: () => string;
+	type: () => KirbyBlockType;
 }
 
 export interface Blocks extends Collection<Block> {
