@@ -73,4 +73,4 @@ export type KirbyComponentProps<TBlockType extends KirbyBlockType> = {
 	block: KirbyBlock<TBlockType>;
 };
 
-export type * from '.';
+export type { Image } from './image';
