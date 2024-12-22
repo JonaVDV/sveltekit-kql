@@ -70,7 +70,7 @@ export type BlocksMap = Partial<{
 }>;
 
 export type KirbyComponentProps<TBlockType extends KirbyBlockType> = {
-	block: KirbyBlock<TBlockType>;
+	block?: KirbyBlock<TBlockType>;
 };
 
 export type { Image } from './image';
