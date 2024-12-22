@@ -18,7 +18,7 @@ const photographyQuery = {
 				cover: {
 					query: page().content().cover.toFile(),
 					select: {
-						cropped: {
+						resized: {
 							query: file().crop(400, 500),
 							select: {
 								url: true
@@ -31,7 +31,7 @@ const photographyQuery = {
 				image: {
 					query: page().images().first(),
 					select: {
-						cropped: {
+						resized: {
 							query: file().crop(400, 500),
 							select: {
 								url: true

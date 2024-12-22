@@ -1,4 +1,5 @@
 import { file, page } from '$lib/kql';
+import { transformQuery } from '$lib/server/utils.js';
 import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
 const HomeQuery = {
 	query: page('home').children(),
@@ -47,21 +48,21 @@ const photographyQuery = {
 export const load = async ({ fetch }) => {
 	const homeResponse = await fetch('./api/cms', {
 		method: 'POST',
-		body: JSON.stringify(HomeQuery)
+		body: JSON.stringify(transformQuery(HomeQuery))
 	});
 
-	const photographyResponse = await fetch('./api/cms', {
-		method: 'POST',
-		body: JSON.stringify(photographyQuery)
-	});
+	// const photographyResponse = await fetch('./api/cms', {
+	// 	method: 'POST',
+	// 	body: JSON.stringify(transformQuery(photographyQuery))
+	// });
 
 	const homeData = (await homeResponse.json()) as KQLQueryTypeResolver<typeof HomeQuery>;
-	const photographyData = (await photographyResponse.json()) as KQLQueryTypeResolver<
-		typeof photographyQuery
-	>;
+	// const photographyData = (await photographyResponse.json()) as KQLQueryTypeResolver<
+	// 	typeof photographyQuery
+	// >;
 
 	return {
-		home: homeData,
-		photography: photographyData
+		home: homeData
+		// photography: photographyData
 	};
 };

@@ -4,7 +4,19 @@ import type { KQLQueryTypeResolver } from '$lib/types/query-resolver';
 import type { LayoutServerLoad } from './$types';
 
 const siteQuery = {
-	query: site()
+	query: site(),
+	select: {
+		title: true,
+		description: true,
+		children: {
+			query: site().children(),
+			select: {
+				id: true,
+				title: true,
+				isListed: true
+			}
+		}
+	}
 };
 
 export const load: LayoutServerLoad = async ({ fetch }) => {
